@@ -3,6 +3,17 @@
 > Format : `../_CONTRAT-RAPPORT.md`. Le plus récent en haut. Feu 🟢 `READY_FOR_PUSH` / 🔴 `BLOCKED_*` (R6).
 > Registre des vulnérabilités : `../agents/securite/REGISTRE.md` (SEC-###, P0–P3). **Veto Release si P0 ouvert**.
 
+## [2026-07-23] T-002 — Architecture du coffre ZERO-KNOWLEDGE
+- **Feu** : 🟢 `READY_FOR_PUSH`
+- **Périmètre touché** : `orchestration/agents/securite/ARCHI-ZERO-KNOWLEDGE.md` (nouveau) + ce rapport. **Writer unique respecté** ; `MODELE-MENACE.md`/`REGISTRE.md` **non modifiés** (SEC-### référencés par numéro). Basé sur `origin/atelier` (vague 1 intégrée).
+- **Fait** : Spécification d'architecture cryptographique — invariant ZK (serveur ne lit jamais, récupération sans déchiffrement serveur) ; **hiérarchie de clés à enveloppes** (phrase→Argon2id→RootKey→HKDF→KEK→DEK par item, enveloppes `E_*` par facteur/appareil) ; **E2E/AEAD** (XChaCha20-Poly1305 / AES-256-GCM, AAD, padding métadonnées) ; **dérivation client** Argon2id à **plancher codé en dur** + PAKE OPAQUE ; **récupération « zéro perte » 4 facteurs** (phrase, sauvegarde chiffrée, contacts de confiance/Shamir opérateur < t, carte SIM numérique de secours, + codes hors-ligne) **sans escrow** ; **enrôlement multi-appareils** sans secret en clair + **sync chiffrée** (CRDT/LWW, Merkle signé anti-rollback) ; **stockage serveur aveugle** ; **rotation/révocation** (ré-encapsulation KEK, crypto-shredding, fenêtre anti-rançongiciel) ; **mapping des 18 SEC-### P0**.
+- **Preuve** : commit sur `claude/tel-online-threat-model-q2cm4s` (`ARCHI-ZERO-KNOWLEDGE.md`) ; **PR draft vers `atelier`**.
+- **Tests (R8)** : **humains obligatoires** (revue d'architecture) ; *automatisables* ensuite côté modules : rejet d'un ciphertext altéré (AEAD), refus d'un downgrade KDF, refus d'une version servie ≤ (anti-rollback), preuve d'architecture « aucune clé serveur ».
+- **Sécurité** : couvre **par conception 10/18 P0** (SEC-001,002,003,004,011,012,013,016,018 + 015 confidentialité coffre) ; **atténue** SEC-014 (dépend de l'endpoint → Infra) ; **route** les P0 hors périmètre coffre (eSIM 005/006/007 → T-004 ; paiement/IDOR 008/009/010 → T-003 ; plan de contrôle 017 → Infra). **Aucun P0 fermé** (audit non destructif) ⇒ **VETO Release toujours actif (R10)**.
+- **Décisions nécessaires (R7)** : (1) **modèle de secret** — reco **Option B : 1 secret maître (phrase) + clé matérielle biométrique** (pas de 2ᵉ secret mémorisé) + Q2 longueur phrase 12/24 mots (reco ≥128 bits) ; (2) seuil Shamir social (reco 2-de-3 ou 3-de-5, opérateur 0 part) ; (3) fenêtre d'annulation 7–30 j / cooldown 24–72 h ; (4) carte SIM secours incluse ou premium.
+- **Reste à faire / prompt de reprise** : implémentation conforme par les modules (fermeture des P0 → levée du VETO) ; articuler avec **T-004** (eSIM) qui a T-002 en prérequis.
+- **Routage** : `/module-infra` (OPAQUE, HSM/KMS cloisonné, hébergement UE, attestation, signature de code) · `/tickets` (T-003 paiement/KYC-AML) · `/design` (écrans sensibles) · patron (décisions ci-dessus).
+
 ## [2026-07-23] T-001 — Modèle de menace & analyse de risques TEL ONLINE
 - **Feu** : 🟢 `READY_FOR_PUSH`
 - **Périmètre touché** : `orchestration/agents/securite/MODELE-MENACE.md` (nouveau) + `orchestration/agents/securite/REGISTRE.md` (mis à jour) + ce rapport. **Writer unique respecté** (aucune écriture hors `orchestration/agents/securite/` et `rapports/securite.md`).
