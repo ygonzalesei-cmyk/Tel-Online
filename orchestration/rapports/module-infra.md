@@ -3,6 +3,24 @@
 > Format : `../_CONTRAT-RAPPORT.md`. Le plus récent en haut. Feu 🟢 `READY_FOR_PUSH` / 🔴 `BLOCKED_*` (R6).
 > Périmètre infra (déploiement, serveur, sauvegardes, auth/JWT, robustesse). Writer désigné de `../agents/REGISTRE-TECH.md`.
 
+## [2026-07-23] T-009 — Isolation « télécom régulé » vs coffre zero-knowledge + socle infra UE
+- **Feu** : 🟢 `READY_FOR_PUSH`
+- **Périmètre touché** : `orchestration/agents/module-infra/ISOLATION-LI-ZK.md` (writer unique `/module-infra`, **fichier créé**, **séparé** de `REGISTRE-TECH.md`) + le présent rapport. **Lecture seule** de `securite/MODELE-MENACE.md`, `securite/REGISTRE.md`, `REGISTRE-TECH.md` — **fichiers Sécurité non modifiés** (SEC-### / VETO-V## référencés par ID).
+- **Fait** : spécification d'isolation **routée par la Sécurité** (T-001, Annexe D.3) —
+  - **Zones** Z-ZK / Z-REG / Z-LI / Z-ADMIN / Z-EDGE / Z-OBS + **frontière F6 étanche** (aucune clé ni corrélation ne la franchit) ;
+  - **Cloisonnement LI/rétention télécom HORS coffre ZK** + preuve de non-atteignabilité du vault ; Z-LI incluse dans le modèle insider ;
+  - **Segmentation réseau/tenants** (anti-SSRF, **KMS isolé**), plan admin **JIT / dual-control / WORM** ;
+  - **KMS/HSM pour clés d'INFRA uniquement** (jamais les clés utilisateur, dérivées côté client ; aucune capacité opérateur) ;
+  - **Découplage numéro ⟷ identité du coffre** (anti SIM-swap) + **port-out / renvoi d'appel** ; eSIM = transfert (pas clone) ;
+  - **Client web/PWA** (CSP/SRI/intégrité de code) ; **écritures atomiques**, **rate-limit par identité**, **sauvegardes UE cloisonnées** ;
+  - **Mapping SEC-### P0/P1** (SEC-001, 005–007, 010–018, 021, 023, 036–038) + angles morts D.1 (LI, port-out, web/PWA).
+- **Preuve** (R1) : branche `claude/module-infra-bm5d9p` · commit spec `7fad422` · **PR draft #9** → `atelier` : https://github.com/ygonzalesei-cmyk/Tel-Online/pull/9 · scan anti-secret **négatif**.
+- **Tests (R8)** : *automatisables* → lint Markdown + scan « aucun secret » (**négatif**) ; *semi-auto* → revue croisée `/securite` (cohérence SEC-### / VETO) ; *humains obligatoires* → **validation patron** (périmètre LI/rétention, hébergeur, tenancy) ; *preuve manquante* → aucune (doc).
+- **Sécurité** : **renforce le zero-knowledge** (aucune capacité de déchiffrement serveur/opérateur ; F6 étanche ; **LI isolée du vault**). Contribue à la mitigation de **18 SEC-###** (dont 13 P0) **sans les clore** (clôture = `/securite`, levée du VETO R10). **Aucun SEC-### nouveau** ouvert.
+- **Décisions nécessaires (R7)** — *n'ont pas arrêté la mission* : périmètre exact **LI/rétention** (conformité, T-003) ; **hébergeur UE & tenancy** (ETAT §5) ; **UX web/PWA** (`/design`) ; **portefeuille = EMI** (T-003).
+- **Reste à faire / prompt de reprise** : affiner la frontière LI une fois le cadrage **T-003** posé ; **co-spéc web/PWA** avec `/design` ; compléter au **T-004** (modules + stack).
+- **Routage** : `/securite` (cohérence modèle de menace / VETO) · `/design` (UX flux sensibles web/PWA) · `/tickets` (suivi T-009) · `/release` (merge après gardien R10 + GO patron).
+
 ## [2026-07-23] T-007 — Registre technique initial (canaux officiels, NOMS uniquement)
 - **Feu** : 🟢 `READY_FOR_PUSH`
 - **Périmètre touché** : `orchestration/agents/REGISTRE-TECH.md` (writer unique `/module-infra`) + le présent rapport. **Un seul writer respecté** ; aucune écriture hors périmètre (lecture seule de `VISION.md` et `securite/REGISTRE.md`).
