@@ -579,3 +579,44 @@ Budgets charte §9 (mobile d'entrée de gamme / réseau lent). Points spécifiqu
 - **Spécifique — Consolidation des SPECS de renvoi.** `SPECS-phrase-recuperation.md` et `SPECS-esim-secours.md` doivent être **rédigées** pour reprendre la chorégraphie détaillée ; d'ici là, les garanties de sécurité critiques de B3 restent portées par la présente SPEC (§5/B3, §9).
 
 *Documents liés : `CHARTE-UX.md` (socle) · `SPECS-phrase-recuperation.md` · `SPECS-esim-secours.md` · `SPECS-onboarding-coffre.md` · `SPECS-abonnement-freemium.md`.*
+
+---
+
+## Alignement modèle de menace (T-010)
+
+> Ajout T-010 : la récupération est **le moment d'attaque** (phishing, prise de contrôle). Alignement sur `../securite/MODELE-MENACE.md`. Constats centraux : **SEC-001/002/003 (P0)** (récupération sans backdoor, rotation sous step-up) et **SEC-004 (P0)** (phishing seed). On **spécifie la mesure UX** ; mécanismes **routés** (R12). **WCAG 2.2 AA maintenu**. Traçabilité : `ALIGNEMENT-MENACE.md`.
+
+### Capture d'écran (par plateforme) — SEC-025 (P1) · VETO-V14
+- Tout écran affichant un **facteur** (phrase re-affichée, code de secours, code d'activation de la SIM de secours) est **écran protégé** : **Android** bloque ; **iOS** occulte l'aperçu multitâche + détecte. Aucun SDK tiers (VETO-V6).
+
+### Overlay / tapjacking — SEC-004 (P0) · angle mort D.1 (partage d'écran / RAT)
+- **Détection d'overlay et de partage/enregistrement d'écran** pendant tout le parcours de récupération → **masquage des secrets** + avertissement ; **appuis obscurcis ignorés** sur les validations.
+- **Cooldown** sur les actions sensibles (rotation, restauration) déclenchées **pendant** un partage d'écran détecté (contre la fraude par télé-assistance / RAT).
+
+### Phishing de la seed — SEC-004 (P0) · VETO-V15 · VETO-V5 · VETO-V11
+- La phrase est **saisie / re-dérivée localement uniquement** (jamais envoyée) ; **aucune API n'accepte la phrase**.
+- **Aucun chemin support** ne peut restaurer le coffre : message explicite « **Même TEL ONLINE ne peut pas récupérer à votre place** » (VETO-V5, anti-escrow).
+- **Step-up phishing-resistant** (passkey) — **jamais** d'OTP SMS/voix (VETO-V11) ; **délai / cooldown + notification hors-bande signée** avant toute rotation de clé/seed (SEC-003).
+- **Number-matching + contexte affiché** sur toute approbation push (anti prompt-bombing / MFA-fatigue — SEC-031) ; limitation de fréquence.
+
+### Autofill / presse-papiers — SEC-026 (P1) · VETO-V14 · angle mort D.1 (autofill)
+- Les champs de saisie des facteurs (phrase, code de secours) sont **exclus de l'autofill tiers** (pas de fuzzy-match) ; **clavier système sécurisé** ; collage éventuel → **effacement immédiat** du presse-papiers, **local non synchronisé**.
+
+### Télécom : port-out & renvoi d'appel — angle mort D.1 (P0) · SEC-005/006
+- Comme la SIM de secours peut servir de facteur : **verrou de portage** (PIN + gel + **notification hors-bande** + cooldown) et **notification de tout changement de renvoi d'appel / messagerie vocale** (chemins de SIM-swap). Le **numéro n'est jamais un facteur d'authentification** (VETO-V11).
+
+### Résilience (anti-DoS de récupération) — SEC-037/038 (P1)
+- Rate-limit **par identité légitime** (pas par ressource) ; **alternatives hors-bande** ; jamais de cul-de-sac (un facteur indisponible propose toujours un autre facteur).
+
+### Accessibilité maintenue (WCAG 2.2 AA)
+- Parcours guidé **sans cul-de-sac** entièrement accessible ; **step-up** avec repli accessible (3.3.8) ; **number-matching** lisible/gros caractères ; avertissements en région live assertive ; messages en langage clair.
+
+### Traçabilité (extrait)
+| SEC-### / VETO | Mesure UX ici | Statut |
+|---|---|---|
+| **SEC-001/002/003 (P0)** · V5 | Aucun support ne restaure ; step-up + délai + notif signée avant rotation | ➕ T-010 |
+| **SEC-004 (P0)** · V15 · V11 | Saisie/dérivation locale, pas de SMS, pédagogie | ✅ + tracé |
+| SEC-031 | Number-matching + contexte + limitation (anti prompt-bombing) | ➕ T-010 |
+| D.1 port-out / renvoi d'appel (P0) | Verrou de portage + notifications | ➕ T-010 |
+| SEC-025 · SEC-026 · V14 | Anti-capture, anti-overlay, autofill exclu, clavier sécurisé | ➕ T-010 |
+| SEC-037/038 | Anti-DoS de récupération, alternatives hors-bande | ➕ T-010 |

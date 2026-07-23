@@ -594,3 +594,48 @@ Règles dérivées de la **Charte §10**, appliquées à ce parcours :
 │ ╚═══════════════════════════╝ │
 └───────────────────────────────┘
 ```
+
+---
+
+## Alignement modèle de menace (T-010)
+
+> Ajout T-010 : alignement de l'onboarding/création du coffre sur `../securite/MODELE-MENACE.md` (registre `SEC-###` / garde-fous `VETO-###`). On **spécifie la mesure UX** ; les mécanismes (FLAG_SECURE, détection d'overlay, exclusion d'autofill, liaison biométrie↔clé, exclusion de backup) sont **routés** vers les modules concernés (R12). **WCAG 2.2 AA maintenu** (cf. section accessibilité ci-dessus et `CHARTE-UX.md` §5). Traçabilité consolidée : `ALIGNEMENT-MENACE.md`.
+
+**Écrans sensibles concernés :** saisie/confirmation du **code**, saisie du **mot de passe maître**, **enrôlement biométrique**.
+
+### Capture d'écran (par plateforme) — SEC-025 (P1) · VETO-V14 · VETO-V6
+- Les écrans de code et de mot de passe maître sont marqués **écran protégé**. **Android** : capture, enregistrement et **aperçu multitâche** bloqués. **iOS** : capture **non blocable** → **occultation de l'aperçu multitâche** (vue masquée en arrière-plan) + **détection** d'une capture avec avertissement.
+- **Aucun SDK tiers** (session-replay/crash/analytics) sur ces écrans (VETO-V6).
+- **UX :** bandeau discret « Écran protégé » — **texte réel** (jamais image de texte).
+
+### Overlay / tapjacking — SEC-004 (P0) · angle mort D.1 (partage d'écran / RAT)
+- Pendant la saisie/confirmation du code et l'activation biométrique : si une **sur-couche** (overlay) ou un **partage/enregistrement d'écran** est détecté → l'écran **se masque** et affiche « Une autre application se superpose à l'écran : masqué par sécurité », et **les appuis obscurcis sont ignorés** (pas de validation à l'aveugle).
+- Aucune action critique (création du coffre, activation biométrie) validable tant qu'un overlay est actif.
+
+### Phishing de la seed — SEC-004 (P0) · VETO-V15
+- L'onboarding **n'affiche ni ne demande** la phrase de récupération (renvoi vers `SPECS-phrase-recuperation.md`).
+- **Message d'éducation** à la fin de la création : « TEL ONLINE ne vous demandera **jamais** votre phrase ni votre code par message, e-mail ou appel. »
+- Le **mot de passe maître / code** n'est **jamais transmis ni validé côté serveur** (dérivation locale — VETO-V3).
+
+### Autofill / presse-papiers — SEC-026 (P1) · VETO-V14 · angle mort D.1 (autofill)
+- Le **mot de passe maître** et le **code** sont des secrets racine : champ **exclu de l'autofill tiers** et de la proposition « enregistrer ce mot de passe » d'un gestionnaire tiers ; **clavier système sécurisé exigé** (avertissement accessible si un clavier tiers est actif) ; **pas de suggestion / autocorrection / cache** ; **pas de copie**.
+- Si un collage est utilisé pour la saisie assistée (conformité **3.3.8**) : **effacement immédiat** du presse-papiers, **presse-papiers local non synchronisé**.
+- **Rappel sauvegarde OS (SEC-027/VETO-V16) :** message « votre coffre **n'est pas copié** dans les sauvegardes iCloud/Google » (exclusion de backup routée module).
+
+### Déverrouillage & disponibilité — SEC-018 (P0) · SEC-037 (P1)
+- **Biométrie + repli code PIN toujours disponible** ; le **ré-enrôlement** biométrique par un tiers **invalide** l'accès ; **déverrouillage 100 % hors ligne** (pas de couplage serveur, pas d'auto-effacement déclenchable à distance).
+
+### Accessibilité maintenue (WCAG 2.2 AA)
+- Bandeau « Écran protégé » et avertissement d'overlay = **texte réel**, l'avertissement d'overlay est **annoncé en région live assertive**.
+- Le **clavier sécurisé** reste navigable, compatible gros caractères et lecteur d'écran.
+- La **biométrie a toujours un repli code accessible** (3.3.8) ; aucune étape ne dépend d'un seul canal sensoriel.
+
+### Traçabilité (extrait)
+| SEC-### / VETO | Mesure UX ici | Statut |
+|---|---|---|
+| SEC-025 · V14 · V6 | Anti-capture par plateforme, occultation multitâche, pas de SDK tiers | ➕ T-010 |
+| SEC-004 · V15 | Éducation anti-phishing, code jamais envoyé serveur | ➕ T-010 |
+| SEC-026 · V14 | Clavier sécurisé, exclusion autofill/copie du secret racine | ➕ T-010 |
+| SEC-018 · V13 | Biométrie + repli PIN, invalidation au ré-enrôlement | ➕ T-010 |
+| SEC-027 · V16 | Message d'exclusion de sauvegarde OS | ➕ T-010 |
+| SEC-037 | Déverrouillage hors ligne, pas d'auto-wipe distant | ➕ T-010 |
