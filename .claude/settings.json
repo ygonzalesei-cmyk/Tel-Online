@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[ROLE-LOCK TEL ONLINE] (R13) (Re)charge D'ABORD le skill de ta session /<nom> et respecte ses limites (perimetre exclusif, un seul writer). Flux web (R9) : branche claude/<nom> + PR draft vers atelier ; JAMAIS de push direct atelier, JAMAIS main (seul Release fait atelier->main). Fin de mission = rapport 🟢/🔴 dans orchestration/rapports/<agent>.md (R6). Ne reste pas bloque (R7). Securite TEL ONLINE : coffre zero-knowledge, pas d'OTP bancaire stocke, pas de clair. ORCHESTRATEUR (go/pm) : produis des PROMPTS copiables lancables tout de suite ; n'execute PAS tests/merge/push/recette/audit.\""
+          }
+        ]
+      }
+    ]
+  }
+}
