@@ -3,6 +3,17 @@
 > Format : `../_CONTRAT-RAPPORT.md`. Le plus récent en haut. Feu 🟢 `READY_FOR_PUSH` / 🔴 `BLOCKED_*` (R6).
 > Registre des vulnérabilités : `../agents/securite/REGISTRE.md` (SEC-###, P0–P3). **Veto Release si P0 ouvert**.
 
+## [2026-07-23] T-003 — Cadrage conformité (RGPD · DSP2/SCA · KYC-AML · hébergement UE)
+- **Feu** : 🟢 `READY_FOR_PUSH`
+- **Périmètre touché** : `orchestration/agents/securite/CONFORMITE.md` (nouveau) + ce rapport. **Writer unique respecté** ; `MODELE-MENACE.md`/`REGISTRE.md` **non modifiés** (SEC-### référencés par numéro). Basé sur `origin/atelier`.
+- **Fait** : Cadrage conformité — **RGPD** (rôles, base légale par finalité + art. 9 biométrie, minimisation & matrice de rétention, droits des personnes dont art. 22 AML, DPA/transferts Schrems II, **DPIA** obligatoire, violation art. 33/34 + matrice de notifiabilité, **esquisse de registre des traitements art. 30**) ; **DSP2/SCA** (dynamic linking, **pas d'OTP bancaire stocké** → passkeys, moteur d'exemptions serveur, EMD2/EMI + safeguarding, PCI-DSS/3DS) ; **KYC/AML** (CDD/EDD, screening PEP/sanctions, SAR→Tracfin, conservation 5 ans, points de contrôle par flux) ; **hébergement UE** + isolation LI/rétention télécom vs coffre ZK ; **journalisation WORM & moindre privilège**.
+- **Preuve** : commit sur `claude/securite-conformite-t003` (`CONFORMITE.md`) ; **PR draft vers `atelier`**.
+- **Tests (R8)** : **humains obligatoires** (revue juridique / référent conformité) ; *automatisables* ensuite : contrôles CI « pas d'OTP 3DS stocké », « pas de PAN/PII en logs », « hébergement/localisation UE ».
+- **Sécurité** : **aucun nouveau SEC-### ouvert** (les risques réglementaires étaient déjà consignés en T-001) ; **VETO Release inchangé** (R10, 18 P0). Cadrage **soumis à validation d'un référent conformité**.
+- **Décisions nécessaires (R7)** : (1) **référent conformité / DPO** (ou Sécurité seule au départ ?) ; (2) statut paiement **EMI propre vs partenaire PSP/EMI** ; (3) partenaires (hébergeur UE, PSP/wallet, opérateur eSIM, **KYC certifié PVID**) ; (4) périmètre **PCI-DSS** / ambition **eIDAS/PVID** ; (5) principe d'isolation **LI/rétention télécom vs coffre ZK**.
+- **Reste à faire / prompt de reprise** : validation par un référent conformité ; **DPIA** ; registre des traitements complet ; exécution de l'isolation LI (**T-009 / Infra**).
+- **Routage** : `/module-infra` (hébergement UE, **T-009** isolation LI, HSM/KMS) · `/tickets` (DPIA, registre complet, suite T-004) · `/design` (**T-010** anti-capture, consentement ePrivacy, parcours SCA/KYC accessibles) · patron (décisions ci-dessus).
+
 ## [2026-07-23] T-001 — Modèle de menace & analyse de risques TEL ONLINE
 - **Feu** : 🟢 `READY_FOR_PUSH`
 - **Périmètre touché** : `orchestration/agents/securite/MODELE-MENACE.md` (nouveau) + `orchestration/agents/securite/REGISTRE.md` (mis à jour) + ce rapport. **Writer unique respecté** (aucune écriture hors `orchestration/agents/securite/` et `rapports/securite.md`).
