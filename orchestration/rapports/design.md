@@ -1,6 +1,71 @@
-# Rapports — /design
+# Rapport — Pôle Design · Mission T-006
 
-> Format : `../\_CONTRAT-RAPPORT.md`. Le plus récent en haut. Feu 🟢 `READY_FOR_PUSH` / 🔴 `BLOCKED_*` (R6).
-> **Lecture seule sur le code** : produit la charte + les SPECS ; les modules implémentent (R12).
+| | |
+|---|---|
+| **Mission** | T-006 — Charte UX + SPECS des écrans sensibles de TEL ONLINE |
+| **Branche de dev** | `claude/design-cmnaxa` |
+| **Cible PR** | `atelier` (jamais `main`) |
+| **Date** | 2026-07-23 |
+| **Statut global** | 🟢 **Livrables produits, poussés et PR draft ouverte vers `atelier`** ([PR #2](https://github.com/ygonzalesei-cmyk/Tel-Online/pull/2)) |
 
-_(Mission J0 dispatchée : **T-006** charte UX mobile-first + WCAG + multilingue (SPECS de base). Rapport attendu à la clôture.)_
+---
+
+## 🟢 Livrables produits (périmètre `orchestration/agents/design/`)
+
+| Fichier | Contenu | Taille |
+|---|---|---|
+| `CHARTE-UX.md` | **Charte UX socle v0.2** : principes grand public, mobile-first, WCAG 2.2 AA, i18n dès le départ, offline-first, perf, sécurité UX, tokens à contrastes **calculés**, verrouillage du coffre, glossaire. | ~320 l. |
+| `SPECS-onboarding-coffre.md` | Onboarding + création du coffre (valeur → protection locale → coffre prêt), permissions différées, verrouillage, offline. | ~596 l. |
+| `SPECS-phrase-recuperation.md` | Phrase de récupération : affichage sécurisé, sauvegarde papier, vérification non-cognitive (3.3.8), report avec rappel du risque. | ~477 l. |
+| `SPECS-recuperation-zero-perte.md` | Configuration des facteurs (phrase + SIM numérique/SMS + sauvegarde chiffrée + contacts de confiance) **et** récupération guidée sans cul-de-sac. | ~581 l. |
+| `SPECS-esim-secours.md` | Carte SIM numérique de secours : compatibilité, activation guidée, états réseau, quota, usage en récupération. | ~534 l. |
+| `SPECS-abonnement-freemium.md` | Offre gratuite / premium : comparaison transparente (sans dark patterns), passage premium, résiliation aussi simple que la souscription. | ~572 l. |
+| `../rapports/design.md` | Le présent rapport. | — |
+
+**Périmètre respecté** : écriture uniquement sous `orchestration/agents/design/` (+ ce rapport). **Aucune modification de code** (R12) ; les maquettes sont des **wireframes textuels**, les i18n des **tables clé→texte**. Lecture seule sur le code (au demeurant, le dépôt était vide).
+
+---
+
+## 🟢 Méthode & qualité
+
+- **Charte rédigée en premier** (document socle), avec une **palette de tokens dont chaque ratio de contraste a été calculé** (WCAG AA/AAA).
+- **Orchestration multi-agents** : pour chaque SPEC, pipeline **rédaction → audit adversarial → révision** ; la **charte** a elle-même été auditée. 16 agents, 0 erreur.
+- **15 corrections d'audit appliquées à la charte** (passage v0.1 → **v0.2**), dont :
+  - 🔴→✅ **Verrouillage/déverrouillage du coffre** (§10.1) + **8ᵉ état d'écran « Verrouillé »** (§13).
+  - 🔴→✅ **Divulgation privée des secrets** au lecteur d'écran (casque, lecture mot-à-mot, pas de région *live* sur un secret) (§5.3).
+  - 🟠→✅ **Palette sombre** complétée et **recalculée** ; correction du piège lien vs bouton (`#6AA6FF` ne peut pas porter de texte blanc) (§11.2).
+  - 🟠→✅ **Capture d'écran réaliste par plateforme** (Android bloque, iOS ne peut que détecter) + masquage de l'aperçu multitâche + presse-papiers inter-appareils (§10).
+  - 🟠→✅ **Champ d'affichage vs de saisie** d'un secret et conformité **WCAG 3.3.8** (collage autorisé pour la saisie) (§10, §5.4).
+  - 🟠→✅ **i18n** : 6 catégories de pluriel ICU (arabe), isolation **bidi**, système de chiffres par locale, expansion par plage de longueur (§6).
+  - 🟠→✅ **Citations WCAG corrigées** (2.4.13 pour l'apparence du focus) et critères ajoutés (2.5.7, 3.2.6, 1.4.13, 1.3.5, 2.4.1).
+  - 🟠→✅ **Tous les renvois de section** rectifiés (bug de numérotation) + harmonisation terminologique.
+- **Vérification finale des SPECS** : aucun bloc de code applicatif, aucun jargon à l'écran, structure complète (16 sections), points de sécurité critiques présents, alignement terminologique avec la charte.
+
+---
+
+## 🟢 Livraison
+
+- Branche **`claude/design-cmnaxa`** rebasée sur **`origin/atelier`** (base d'intégration), puis poussée.
+- **PR draft** ouverte : **`claude/design-cmnaxa` → `atelier`** (jamais `main`) — [PR #2](https://github.com/ygonzalesei-cmyk/Tel-Online/pull/2). Le diff correspond **exactement** aux 7 fichiers de design (~3213 lignes ajoutées, rien d'autre).
+
+> **Note sur le 403 initial.** À la première passe, le dépôt distant était **vide/non initialisé** (aucune branche `main`/`atelier`), ce qui rendait tout push impossible (403) — signalé à l'époque plutôt que contourné. Depuis, l'orchestrateur a amorcé `atelier` ; le push et la PR fonctionnent désormais normalement, **sans action manuelle requise**.
+
+---
+
+## ⚠️ Notes & décisions
+
+- **`/design`** : c'est une **commande CLI intégrée**, non chargeable par l'outil `Skill` (le système demande à l'utilisateur de la lancer). J'ai donc appliqué les bonnes pratiques UX/accessibilité directement (R7 : pas de blocage).
+- **Amorçage `atelier`** : une branche `atelier` locale a été préparée à partir d'un commit racine, en vue de servir de base à la PR ; sa publication attend l'accès en écriture.
+- **Hypothèses produit** `HYP-1`…`HYP-5` (charte §1) : formulées par le Design pour la cohérence des maquettes, **à confirmer par le pôle Produit**.
+
+## Questions ouvertes (renvoi charte §17)
+`Q1` hypothèses produit · `Q2` longueur/vocabulaire de la phrase · `Q3` facteurs de récupération & priorité · `Q4`/`Q5` périmètre gratuit vs premium & quota SIM de secours · `Q6` langues + système de chiffres · `Q7` contraintes réglementaires (KYC/RGPD) · `Q8` périmètre « valeur/argent ».
+
+## Prochaines étapes proposées
+1. ✅ Branche poussée et **PR draft ouverte vers `atelier`** ([PR #2](https://github.com/ygonzalesei-cmyk/Tel-Online/pull/2)).
+2. Revue en atelier de la charte v0.2 et des 5 SPECS ; trancher `Q1`…`Q8`.
+3. Décliner les maquettes visuelles à partir des tokens validés.
+
+---
+
+*Rapport généré par le pôle Design (session DESIGN). Livrables : `orchestration/agents/design/CHARTE-UX.md` + `SPECS-*.md`.*
