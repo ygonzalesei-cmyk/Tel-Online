@@ -26,6 +26,7 @@
 ## 2. Fil en cours (J0)
 Dispositif **poussé sur le dépôt distant** (branches `atelier` + `claude/orchestrateur-noxdrw`) → **PR draft #1** ouverte (`claude/orchestrateur-noxdrw → atelier`).
 Déclencheur « dispositif sur le remote » **réalisé** → la **1re vague S0–S2** est **lançable** (rails à fichiers disjoints, parallélisme sûr). CI : aucun pipeline à ce stade (ressort `/qa-auto` au 1er livrable).
+**Checkpoint `go`** : **vague 2 = 0 prompt lançable** pour l'instant — T-002/T-003 attendent **T-001 🟢** (Sécurité), T-004 attend cadrage + validation patron. En attente des rapports de la vague 1.
 
 ## 3. Tickets en vol
 Voir [`tickets/INDEX.md`](tickets/INDEX.md). **Fiches `T-001`→`T-008` seedées** (critères d'acceptation posés), maintenance cédée à **/tickets**.
