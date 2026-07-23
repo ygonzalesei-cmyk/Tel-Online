@@ -10,7 +10,7 @@
   - **États synchronisés** (preuve = PR ouvertes) : **T-002** (PR #8), **T-003** (PR #13), **T-009** (PR #9), **T-010** (PR #10) → **🟢 EN RECETTE (livré)**. Vague 2 = **4/4 🟢** (cf. `../ETAT.md` §2), intégration Release dispatchée.
   - **T-004** : déclencheur réduit à **VALIDATION PATRON** (T-002/T-003 🟢 acquis) — plus aucun ticket amont bloquant.
   - **INDEX** : découpage vague 1 (intégrée) / vague 2 (livrée) ; graphe à jour ; **9/10 tickets livrés**, 0 EN COURS.
-- **Preuve** : commit sur `claude/tickets-4f4x54` (SHA : _complété après push_) ; **PR #11** mise à jour. Intégration vague 2 (dont ce rail) dispatchée à **Release**.
+- **Preuve** : commit `ea81580` sur `claude/tickets-4f4x54` ; **PR #11** mise à jour. Intégration vague 2 (dont ce rail) dispatchée à **Release**.
 - **Tests (R8)** : documentaire → **semi-auto** : contrôle croisé `ETAT.md` ↔ INDEX ↔ PR (#8/#13/#9/#10) — **OK** ; **humains** : validation orchestrateur/patron ; **preuve manquante** : néant.
 - **Sécurité** : aucun secret. **Aucune clôture *FAIT*** (VETO 18 P0 actif, 0 fermé — les P0 se ferment à l'implémentation conforme vérifiée QA). `/tickets` n'ouvre pas de SEC-###.
 - **Décisions nécessaires (R7)** : **T-004 est prêt, sauf GO patron** → arbitrer `../ETAT.md` §5 (modules/stack, partenaires, conformité, secrets, 1 secret maître vs kit, wallet EMI, PCI-DSS/eIDAS, **Design Q1–Q8**). N'a pas bloqué la mission.
