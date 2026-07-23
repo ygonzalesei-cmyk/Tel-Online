@@ -20,13 +20,14 @@ Sans impact sur l'intégration de cadrage (docs). Détail : `agents/securite/REG
 | Release | `/release` | Intégration vague 1 → `atelier` | 🟢 fait |
 | **Sécurité** | `/securite` | **T-002** coffre zero-knowledge | 🟢 **livré** |
 | **Module-Infra** | `/module-infra` | **T-009** isolation LI/rétention vs ZK + infra UE | 🟢 **livré** |
-| **Design** | `/design` | **T-010** SPECS écrans sensibles / menace | ⏳ à lancer |
-| **Sécurité** (suite) | `/securite` | **T-003** conformité RGPD/DSP2/KYC-AML | ⏳ dispatché (T-002 🟢) |
+| **Design** | `/design` | **T-010** SPECS écrans sensibles / menace (PR #10) | 🟢 **livré** |
+| **Sécurité** (suite) | `/securite` | **T-003** conformité RGPD/DSP2/KYC-AML | 🟢 **livré** |
+| **Release** | `/release` | **Intégrer vague 2** dans `atelier` | ⏳ dispatché |
 | Mémoire / Tickets | — | maintien VISION/backlog & tickets | 🟢 dispo |
 | QA-Auto / QA-Recette | — | attente d'un livrable **de code** | ⏸️ gated |
 
 ## 2. Fil en cours (J0)
-Vague 1 **intégrée dans `atelier`** (socle + 5 livrables, Release 🟢). **Vague 2 en cours** : **T-002 🟢** (coffre zero-knowledge — couvre 10/18 P0 par conception, VETO maintenu : aucun P0 fermé) + **T-009 🟢** (isolation LI/ZK) livrés ; **T-010** (Design) à lancer ; **T-003** (conformité) dispatché. Intégration Release de la vague 2 quand T-002/T-009/T-010/T-003 🟢.
+Vague 1 **intégrée** (Release 🟢). **Vague 2 : 4/4 🟢** — T-002 (coffre ZK), T-003 (conformité), T-009 (isolation LI/ZK), T-010 (SPECS↔menace) — **+ Mémoire & Tickets auto-synchronisés**. **Intégration Release de la vague 2 dispatchée** (6 branches-deltas, union des rapports). VETO maintenu (18 P0, aucun fermé). Ensuite **T-004** (modules + stack) : **attend la validation patron**.
 
 ## 3. Tickets
 [`tickets/INDEX.md`](tickets/INDEX.md). **Faits & intégrés** : T-001, T-005, T-006, T-007, T-008 🟢.
