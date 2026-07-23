@@ -1,49 +1,50 @@
 # ETAT.md — Cockpit d'orchestration TEL ONLINE
 
-> Tenu par **l'orchestrateur** (writer unique). Dernière mise à jour : **2026-07-23 (J0)**.
+> Tenu par **l'orchestrateur** (writer unique). Dernière mise à jour : **2026-07-23 (J0, après consolidation vague 1)**.
 > Rappel : l'orchestrateur **produit des prompts** et **lit les rapports** ; il n'exécute rien.
 
+## 🔴 VETO RELEASE ACTIF (R10)
+Sécurité (T-001) a ouvert **18 SEC-### P0** ⇒ **aucun déploiement `atelier → main` possible** tant qu'un P0 reste ouvert.
+N'impacte PAS l'intégration de cadrage dans `atelier` (docs, pas de prod). Détail : `agents/securite/REGISTRE.md`.
+
 ## 0. Dispositif
-- **Dispositif cloné à l'identique** de *Pilotage* : **9 agents transverses** opérationnels (skills créés). Voir le **tableau de parité** : [`PARITE.md`](PARITE.md) (**9/9 identiques**).
-- **Modules métier** : **NON clonés** (décision patron) → définis au **cadrage S0–S2** (Infra + Sécurité), créés après **validation patron**.
-- **Stack technique** : laissée au **cadrage S0–S2** (Infra + Sécurité).
+- **Dispositif cloné à l'identique** de *Pilotage* : **9 agents transverses**. Parité : [`PARITE.md`](PARITE.md) (**9/9**).
+- **Modules métier** & **stack** : définis au **cadrage S0–S2** (Infra + Sécurité), après **validation patron**.
 - **Gabarit de dispatch** : [`MODELE-PROMPT-AGENT.md`](MODELE-PROMPT-AGENT.md).
-- Branches : **`atelier`** (intégration, base des PR) ; **`claude/<nom>`** pour le travail. **`main` (PROD) n'existe pas encore** : elle sera **créée par Release** au 1er déploiement (`atelier → main`, S3+) — conforme au « seul Release fait `atelier → main` ».
+- Branches : `atelier` (intégration) ; `claude/<nom>` (travail). **`main`** créée par **Release** au 1er déploiement.
 
 ## 1. Qui bosse où
-| Session | Skill | Branche | Mission en cours | Feu |
+| Session | Skill | Branche | Mission | Feu |
 |---|---|---|---|---|
-| Orchestrateur | `/orchestrateur` | `claude/orchestrateur-noxdrw` | Bootstrap dispositif + 1re vague S0–S2 | 🟢 en place |
-| Sécurité | `/securite` | `claude/securite-*` | **T-001** menace + **T-005** garde-fous | ⏳ dispatché |
-| Module-Infra | `/module-infra` | `claude/module-infra-*` | **T-007** registre technique (canaux officiels) | ⏳ dispatché |
-| Design | `/design` | `claude/design-*` | **T-006** charte UX + WCAG + multilingue | ⏳ dispatché |
-| Mémoire-Produit | `/memoire-produit` | `claude/memoire-produit-*` | **T-008** VISION + glossaire + backlog | ⏳ dispatché |
-| Tickets | `/tickets` | `claude/tickets-*` | Formaliser fiches **T-001→T-008** + priorisation | ⏳ dispatché |
-| QA-Auto | `/qa-auto` | — | *(en attente d'un premier livrable testable)* | ⏸️ gated |
-| QA-Recette | `/qa-recette` | — | *(en attente d'un déploiement)* | ⏸️ gated |
-| Release | `/release` | — | *(en attente 4 feux verts + GO patron)* | ⏸️ gated |
+| Orchestrateur | `/orchestrateur` | `claude/orchestrateur-noxdrw` | Pilotage, consolidation vague 1, dispatch intégration | 🟢 |
+| Sécurité | `/securite` | `claude/tel-online-threat-model-q2cm4s` | **T-001+T-005** menace + garde-fous | 🟢 livré |
+| Design | `/design` | `claude/design-cmnaxa` | **T-006** charte + SPECS (PR #2) | 🟢 livré |
+| Module-Infra | `/module-infra` | `claude/module-infra-bm5d9p` | **T-007** registre technique | 🟢 livré |
+| Mémoire-Produit | `/memoire-produit` | `claude/memoire-produit-consolidation-fofrlx` | **T-008** VISION/BACKLOG/FAIT | 🟢 livré |
+| Tickets | `/tickets` | `claude/tickets-4f4x54` | Fiches T-001→T-008 + priorisation | 🟢 livré |
+| Release | `/release` | (à lancer) | **Intégrer vague 1 dans `atelier`** | ⏳ dispatché |
+| QA-Auto / QA-Recette | — | — | En attente d'un livrable **de code** | ⏸️ gated |
 
 ## 2. Fil en cours (J0)
-Dispositif **poussé sur le dépôt distant** (branches `atelier` + `claude/orchestrateur-noxdrw`) → **PR draft #1** ouverte (`claude/orchestrateur-noxdrw → atelier`).
-Déclencheur « dispositif sur le remote » **réalisé** → la **1re vague S0–S2** est **lançable** (rails à fichiers disjoints, parallélisme sûr). CI : aucun pipeline à ce stade (ressort `/qa-auto` au 1er livrable).
-**Checkpoint `go`** : **vague 2 = 0 prompt lançable** pour l'instant — T-002/T-003 attendent **T-001 🟢** (Sécurité), T-004 attend cadrage + validation patron. En attente des rapports de la vague 1.
+Vague 1 **livrée et consolidée : 5/5 🟢**. Les branches agents sont basées sur `atelier` **nu** → **intégration requise** :
+`atelier` doit recevoir le **socle** (depuis `claude/orchestrateur-noxdrw`) **+ les 5 livrables** (règle : la version de l'agent prime sur le seed pour SES fichiers). Mission confiée à **Release**.
 
-## 3. Tickets en vol
-Voir [`tickets/INDEX.md`](tickets/INDEX.md). **Fiches `T-001`→`T-008` seedées** (critères d'acceptation posés), maintenance cédée à **/tickets**.
-Actifs J0 : **T-001, T-005** (Sécurité), **T-006** (Design), **T-007** (Infra), **T-008** (Mémoire), + formalisation/priorisation par **/tickets**.
+## 3. Tickets
+Fiches : [`tickets/INDEX.md`](tickets/INDEX.md) (T-001→T-008). Faits (cadrage) : T-001, T-005, T-006, T-007, T-008 = 🟢 (à intégrer).
 
 ## 4. Prochaines étapes / déclencheurs (prompts NON affichés tant que le déclencheur n'est pas réalisé)
-| Prompt en attente | Déclencheur (condition) |
+| Prompt en attente | Déclencheur |
 |---|---|
-| **T-002** Architecture coffre **zero-knowledge** (Sécurité + Infra) | Rapport **T-001** 🟢 (modèle de menace posé) |
-| **T-003** Conformité **RGPD/DSP2/KYC-AML** + hébergement UE (Sécurité) | Rapport **T-001** 🟢 |
-| **T-004** Définition **modules métier + stack** (Infra + Sécurité) | **T-001/T-002/T-003** 🟢 **+ validation patron** |
-| **QA-Auto** (build/lint/unit/smoke) | Premier **livrable testable** poussé en PR `atelier` |
-| **QA-Recette** (conforme + non-régression) | **Déploiement** effectué par Release |
-| **Release** (`atelier → main`) | **QA-Auto 🟢 + QA-Recette 🟢 + Sécurité (0 P0) + Mémoire à jour + GO patron** (R10) |
+| **Vague 2** — T-002 (coffre zero-knowledge, Sécurité) | **`atelier` intégré** (Release 🟢) → base propre pour brancher |
+| **T-003** Conformité RGPD/DSP2 (Sécurité) | après **T-002 🟢** (même writer, 1 mission à la fois) |
+| **T-009** Isolation LI/rétention télco vs ZK (Infra) *(routé par Sécurité)* | `atelier` intégré |
+| **T-010** SPECS anti-capture/anti-overlay (Design) *(routé par Sécurité)* | `atelier` intégré |
+| **T-004** Modules métier + stack (Infra) | T-002/T-003 🟢 **+ validation patron** |
+| **QA-Auto / QA-Recette / Release (deploy)** | 1er livrable **de code** → puis gardien R10 + **0 P0** + GO patron |
 
-## 5. Bloqués patron (décisions nécessaires — R7, sans rien inventer)
-1. **Dépôt** : nouveau dépôt dédié (recommandé) ou sous-dossier ? *(ce dépôt `Tel-Online` semble déjà dédié — à confirmer.)*
-2. **Partenaires** : opérateur **eSIM**, prestataire **paiement/wallet**, **hébergeur UE** — connus ou à sourcer ?
-3. **Conformité** : référent **RGPD/DSP2/KYC-AML**, ou la Sécurité cadre-t-elle seule au départ ?
-4. **Accès/secrets** : où poser les clés (page « Connexions » équivalente / variables d'env) ? → à consigner en **noms** dans `REGISTRE-TECH.md`.
+## 5. Bloqués patron (décisions — R7, sans rien inventer)
+1. **Dépôt** : `ygonzalesei-cmyk/Tel-Online` = dédié (PR #1 dessus) → *à confirmer*.
+2. **Partenaires** (remontés par Infra + Sécurité) : opérateur **eSIM**, prestataire **paiement/wallet**, **hébergeur UE** — connus ou à sourcer ?
+3. **Conformité** : référent **RGPD/DSP2/KYC-AML**, ou Sécurité seule au départ ?
+4. **Secrets** : emplacement (noms → `REGISTRE-TECH.md`) ?
+5. **Décisions Sécurité (T-001)** : (a) **2 secrets** (phrase + mot de passe maître) *ou* **1 kit hardware-backed** ? (b) portefeuille = **monnaie électronique** (EMI) ? (c) périmètre **PCI-DSS** / certif **PVID/eIDAS** ?
