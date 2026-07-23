@@ -24,7 +24,8 @@
 | Release | `/release` | — | *(en attente 4 feux verts + GO patron)* | ⏸️ gated |
 
 ## 2. Fil en cours (J0)
-Bootstrap du dispositif terminé → **1re vague de prompts** = **cadrage sécurité/conformité S0–S2** (rails à fichiers disjoints, parallélisme sûr).
+Dispositif **poussé sur le dépôt distant** (branches `atelier` + `claude/orchestrateur-noxdrw`) → **PR draft #1** ouverte (`claude/orchestrateur-noxdrw → atelier`).
+Déclencheur « dispositif sur le remote » **réalisé** → la **1re vague S0–S2** est **lançable** (rails à fichiers disjoints, parallélisme sûr). CI : aucun pipeline à ce stade (ressort `/qa-auto` au 1er livrable).
 
 ## 3. Tickets en vol
 Voir [`tickets/INDEX.md`](tickets/INDEX.md). **Fiches `T-001`→`T-008` seedées** (critères d'acceptation posés), maintenance cédée à **/tickets**.
