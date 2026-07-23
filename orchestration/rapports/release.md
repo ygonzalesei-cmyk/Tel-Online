@@ -16,7 +16,13 @@
     - **Tickets** (`claude/tickets-4f4x54`) → `tickets/INDEX.md`, `tickets/T-001..T-008.md`, `rapports/tickets.md`.
 - **Preuve** :
   - **SHA final `atelier`** (avant ce rapport) : `1a086fc070c524efd3d29ca4f22c5bc53960d777`.
-  - Têtes de branches intégrées (toutes ancêtres d'`atelier` → PR #1..#6 se fermeront au push) : socle `4b34278`, sécurité `bf82c4d`, infra `6291039`, design `db815eb`, mémoire `3c05a0d`, tickets `5cca309`.
+  - **6 PR fermées automatiquement** au push (têtes devenues ancêtres d'`atelier`, `closed_at = merged_at = 2026-07-23T19:24:01Z`). Mapping exact **PR ↔ branche ↔ SHA de tête** (les libellés `[PR #n]` de mes messages de merge étaient nominaux ; référence faisant foi = le SHA) :
+    - **PR #1** `claude/orchestrateur-noxdrw` `4b34278` (socle)
+    - **PR #2** `claude/design-cmnaxa` `db815eb` (Design)
+    - **PR #3** `claude/memoire-produit-consolidation-fofrlx` `3c05a0d` (Mémoire)
+    - **PR #4** `claude/tel-online-threat-model-q2cm4s` `bf82c4d` (Sécurité)
+    - **PR #5** `claude/module-infra-bm5d9p` `6291039` (Infra)
+    - **PR #6** `claude/tickets-4f4x54` `5cca309` (Tickets)
   - Bilan vs amorce `5094a1e` : **50 fichiers A + 1 M** (`.gitignore`).
   - **Intégrité socle** : empreintes `git ls-tree` de CLAUDE.md / `.claude/*` / ETAT / _REGLES-COMMUNES / PARITE / MODELE-PROMPT-AGENT / _CONTRAT-RAPPORT / CONFIG-WEB / rapport orchestrateur / evaluations → **identiques avant/après** (aucun fichier socle écrasé).
   - **Priorité agent vérifiée** : les 10 fichiers en recouvrement seed↔agent (REGISTRE, rapports, VISION/BACKLOG/FAIT, INDEX, T-###) == version de la branche agent.
