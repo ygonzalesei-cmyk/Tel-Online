@@ -1,52 +1,29 @@
-# Rapport — Agent MÉMOIRE-PRODUIT — Mission T-008
+# Rapport — Agent MÉMOIRE-PRODUIT (`/memoire-produit`)
 
-- **Date** : 2026-07-23
-- **Agent** : memoire-produit (writer unique)
-- **Périmètre autorisé** : `orchestration/agents/memoire-produit/` (VISION.md, BACKLOG.md, FAIT.md) + le présent rapport.
-- **Mission** : consolider la MÉMOIRE PRODUIT — VISION, glossaire, décisions actées, BACKLOG priorisé (MVP → V1 → V2, freemium).
+> Format imposé par `_CONTRAT-RAPPORT.md` (R6). Journal **anti-chronologique** : l'entrée la plus récente est en **haut**.
+> Périmètre (writer unique) : `orchestration/agents/memoire-produit/` (VISION.md, BACKLOG.md, FAIT.md) + ce rapport.
 
-## 🟢 Statut global : mission accomplie (contenu consolidé + publié)
+## [2026-07-23] T-008 — Alignement de la mémoire produit sur la vague 1 intégrée
+- **Feu** : 🟢 READY_FOR_PUSH
+- **Périmètre touché** : `orchestration/agents/memoire-produit/VISION.md`, `.../BACKLOG.md`, `orchestration/rapports/memoire-produit.md` (writer unique respecté). `FAIT.md` inchangé (toujours **vide** — rien de VERIFIED prod).
+- **Fait** : réconciliation de la mémoire produit avec le cadrage intégré (Sécurité T-001/T-005, Design T-006, Registre technique T-007) — **sans rien inventer**, chaque ajout **sourcé** :
+  - **VISION** : définition produit à **3 piliers** (eSIM de secours ; coffre zero-knowledge ; paiement/wallet freemium) ; clés **dérivées côté client** (phrase de récupération + biométrie) ; **garde-fous produit actés** (T-005, à veto) ; glossaire enrichi (eSIM/GSMA RSP, coffre ZK, phrase de récupération, mot de passe maître, SCA/DSP2, PSP/wallet/EMI, KYC/AML, hébergement UE, SEC-###/veto, canaux officiels) ; **correction D-01/D-02** à la formulation **officielle** (modules définis au cadrage Infra/Sécurité — *pas de clone « BTP » de « Pilotage »* ; stack laissée au cadrage Infra/Sécurité S0–S2 ; matérialisation au **T-004**).
+  - **BACKLOG** : freemium rattaché à `/design` (`SPECS-abonnement-freemium`) + PSP SCA/DSP2 ; **15 questions ouvertes routées** vers leurs owners (T-004 ; /securite T-002 & T-003 ; /design ; patron `ETAT.md` §5).
+- **Preuve** : commit de cette passe sur `claude/memoire-produit-consolidation-fofrlx` (base `atelier` à jour) + **PR draft `#12` vers `atelier`** (jamais `main`). Diff = mémoire produit uniquement.
+- **Tests (R8)** : sans objet (documentation) → **preuve = revue** ; pas de build/test applicable. Cohérence des renvois VISION↔BACKLOG vérifiée.
+- **Sécurité** : la mémoire **reflète** l'état `/securite` (**42 SEC-###, 18 P0 ⇒ VETO Release actif**) ; aucun secret ni PII ; **ne modifie pas** le registre SEC (possédé par `/securite`).
+- **Décisions nécessaires (R7)** : aucune bloquante côté mémoire (mission menée au bout). Rappel des décisions **patron** en attente (`ETAT.md` §5) : dépôt dédié, partenaires eSIM/paiement/hébergeur UE, « **2 secrets** (phrase + mot de passe maître) **vs 1 kit hardware-backed** », statut **EMI** du portefeuille, référent conformité RGPD/DSP2/KYC-AML.
+- **Reste à faire / prompt de reprise** : re-consolider la mémoire après **T-002/T-003/T-004** (nouvelles décisions actées) et à chaque nouvelle **SPEC `/design`** ; convertir en `FAIT.md` uniquement ce qui devient **VERIFIED prod**.
+- **Routage** : `/securite` (T-002, T-003) · `/module-infra` (T-004) · `/design` (freemium, récupération) · **patron** (`ETAT.md` §5).
 
-La mémoire produit est **entièrement consolidée** dans le périmètre du writer unique, en français, sans rien coder et sans inventer de décision, puis **publiée** : branche `claude/memoire-produit-consolidation-fofrlx` (basée sur `atelier`) poussée et **PR draft ouverte vers `atelier`** (jamais `main`).
-
-## 🟢 Livrables produits
-
-| Fichier | État | Contenu |
-|---|---|---|
-| `orchestration/agents/memoire-produit/VISION.md` | 🟢 | Promesse « zéro perte », zero-knowledge (avec la tension récupération de compte traitée honnêtement), garde-fous (principes), glossaire, et §5 décisions actées datées. |
-| `orchestration/agents/memoire-produit/BACKLOG.md` | 🟢 | Roadmap MVP (S0–S2) → V1 (~S3–S12) → V2 (S13+), modèle freemium (gratuit 1 appareil ; paliers ~4,99 / ~9,99 / famille) et 15 questions ouvertes routées vers /tickets. |
-| `orchestration/agents/memoire-produit/FAIT.md` | 🟢 | **Volontairement vide** de contenu vérifié : en-tête + convention d'entrée uniquement. Aucun élément `VERIFIED` prod à ce jour. |
-
-## 🟢 Décisions patron consignées (datées)
-
-- **D-01 — Modules non clonés** — source : cadrage patron ; consignée le 2026-07-23. Énoncé strict conservé ; portée opérationnelle **non** actée → /tickets (Q#13).
-- **D-02 — Stack fixée au cadrage** — source : cadrage patron ; consignée le 2026-07-23. La correspondance « cadrage ↔ S0 » est une proposition de séquencement, **non** actée → /tickets (Q#14).
-
-Aucune autre décision n'a été actée : tout le reste est présenté comme **backlog** (propositions) ou **question ouverte** (=> /tickets).
-
-## 🟢 Respect des contraintes
-
-- **Ne pas coder** : 🟢 aucun code produit, uniquement de la documentation produit.
-- **Rester dans le périmètre** : 🟢 seuls les 3 fichiers du dossier `memoire-produit/` + ce rapport ont été écrits.
-- **Ne rien inventer** : 🟢 séparation stricte décisions actées ≠ backlog ≠ questions ouvertes ; l'hypothèse sur la nature du produit est explicitement marquée « à confirmer, NON actée ». Une revue adversariale interne a été passée pour traquer toute affirmation non mandatée par le brief.
-- **FAIT.md vide** : 🟢 aucun élément consigné (rien n'est `VERIFIED` prod).
-- **Besoins nouveaux → /tickets** : 🟢 15 questions ouvertes explicitement routées (périmètre du service, appareils/plateformes, types de données, contenu des paliers, prix famille, devise/cadence de facturation, mécanismes de récupération/intégrité/redondance/suppression/journal, bornes de semaines, portée « modules non clonés », détail stack, conformité RGPD).
-
-## Publication
-
-- **Branche** : `claude/memoire-produit-consolidation-fofrlx`, basée sur `atelier` (commit de base `5094a1e`).
-- **PR draft** : **#3** vers `atelier` (jamais `main`).
-- **CI** : aucun workflow GitHub Actions configuré sur le dépôt au moment de l'ouverture ; aucun commentaire de revue en attente.
-
-> **Historique (résolu).** Au tout premier passage, le dépôt était vide et la session sans droit d'écriture : `git push` (proxy harness) et l'API GitHub renvoyaient `403`. Le blocage a été **levé** dès que l'orchestrateur a initialisé le dépôt (création d'`atelier`) et que les droits d'écriture ont été accordés ; la publication a alors été menée à bien.
-
-## 🟠 Points de vigilance
-
-- 🟠 **Skill `/memoire-produit` introuvable** : non enregistré comme skill dans le dépôt. Impossible à charger ; le travail a été mené directement d'après le brief T-008.
-- 🟠 **Références croisées** VISION ↔ BACKLOG (Q#1, Q#13, Q#14, piliers B-024/B-026) posées ; elles resteront valides tant que la numérotation des questions du BACKLOG n'est pas modifiée.
-
-## Prochaines actions suggérées (hors périmètre — pour information)
-
-- Instruire les 15 questions ouvertes via /tickets (prioriser Q#1 périmètre produit, Q#4 contenu des paliers, Q#7 récupération zero-knowledge).
-- Confirmer par le patron : cadence de facturation, devise, prix du palier Famille.
-- Confirmer le schéma d'intégration (branche `atelier`) côté orchestration.
+## [2026-07-23] T-008 — Consolidation initiale VISION + glossaire + BACKLOG + FAIT
+- **Feu** : 🟢 READY_FOR_PUSH — **livré et intégré** (PR #3 **mergée** dans `atelier`).
+- **Périmètre touché** : `orchestration/agents/memoire-produit/` (VISION.md, BACKLOG.md, FAIT.md) + rapport.
+- **Fait** : **VISION** (promesse « zéro perte », zero-knowledge + tension récupération traitée honnêtement, garde-fous, glossaire, **décisions actées datées** D-01/D-02) ; **BACKLOG** (roadmap MVP S0–S2 → V1 (~S3–S12) → V2 (S13+), **freemium** gratuit 1 appareil ; ~4,99/9,99/famille ; 15 questions ouvertes) ; **FAIT.md vide** (aucun élément VERIFIED prod).
+- **Preuve** : PR **#3** → `atelier`, **mergée** le 2026-07-23 (merged_by patron) ; 4 fichiers, +316. Aucun workflow CI configuré ; aucun commentaire de revue.
+- **Tests (R8)** : sans objet (documentation).
+- **Sécurité** : promesse zero-knowledge posée ; tension récupération signalée (depuis **confirmée** par SEC-001..004).
+- **Décisions nécessaires (R7)** : 15 questions consignées (voir BACKLOG).
+- **Reste à faire / prompt de reprise** : — (mission livrée ; suivi = entrée du haut).
+- **Routage** : `/tickets` pour tout besoin nouveau.
+- **Note environnement** : au 1er passage, dépôt **vide** + session **sans droit d'écriture** (403 git proxy & API) ; **débloqué** après initialisation d'`atelier` par l'orchestrateur, puis publication menée à bien.

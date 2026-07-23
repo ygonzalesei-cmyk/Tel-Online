@@ -95,7 +95,9 @@ Objectif : usages collectifs et modules avancés, une fois le socle et les garde
 
 ## Modèle freemium
 
-> Modèle *freemium* tel que donné par le brief. Les prix sont **approximatifs** (`~`) et la devise **EUR est présumée** (à confirmer => /tickets). La **cadence de facturation** (mensuelle / annuelle / à vie) n'est **pas** donnée par le brief : à confirmer => /tickets (cf. Q#6). Le positionnement exact de chaque palier (nombre d'appareils, quotas, fonctions) n'est **pas** fourni par le brief : chaque case inconnue est marquée `à préciser => /tickets`. Aucun nom marketing n'est inventé ; les paliers gardent leur libellé par le prix.
+> Modèle *freemium* tel que donné par le brief. Les prix sont **approximatifs** (`~`) et la devise **EUR est présumée** (à confirmer). La **cadence de facturation** (mensuelle / annuelle / à vie) n'est **pas** donnée par le brief (cf. Q#6). Le positionnement exact de chaque palier (nombre d'appareils, quotas, fonctions) n'est pas fixé ici. Aucun nom marketing n'est inventé ; les paliers gardent leur libellé par le prix.
+>
+> **MAJ alignement vague 1** : le **contenu et le positionnement** des paliers sont **spécifiés par `/design`** (`design/SPECS-abonnement-freemium.md`) et les paiements passent par un **PSP SCA/DSP2 + wallets certifiés** (Registre technique T-007). Les **montants et la cadence** restent à **valider patron** (=> `ETAT.md` §5) ; la mémoire produit **reflète**, ne tranche pas.
 
 | Palier | Prix (approx., EUR — cadence à confirmer => /tickets) | Appareils | Quota / stockage | Fonctions incluses |
 |---|---|---|---|---|
@@ -108,9 +110,22 @@ Objectif : usages collectifs et modules avancés, une fois le socle et les garde
 
 ---
 
-## Questions ouvertes (route => /tickets)
+## Questions ouvertes (routées vers leurs owners)
 
-1. **Définition précise du produit** : périmètre exact du service (sauvegarde ? synchronisation ? les deux ?) sous « zéro perte » et zero-knowledge, au-delà de la synthèse « à confirmer » du brief.
+> **MAJ alignement vague 1 (2026-07-23).** Les questions ci-dessous ne sont **pas** toutes du ressort de `/tickets` : le cadrage intégré leur a donné un owner. Routage consolidé (la mémoire produit **suit**, ne tranche pas) :
+>
+> | Q# | Owner / instruction | Statut |
+> |---|---|---|
+> | Q1, Q13, Q14 | **T-004** (modules métier + stack, `/module-infra`+`/securite`, + patron) | en attente déclencheur (T-001/002/003 🟢 + patron) |
+> | Q7, Q8, Q9, Q10, Q11 | **/securite** (T-002 coffre ZK ; constats SEC-001..004, 011, 012, 022, 024) + SPECS `/design` récupération | T-002 après T-001 🟢 |
+> | Q15 (+ résidence UE) | **/securite T-003** (RGPD / DSP2 / KYC-AML / hébergement UE) | après T-001 🟢 |
+> | Q2, Q3 | **T-004** + SPECS `/design` (plateformes, données) | à cadrer |
+> | Q4, Q5, Q6 | **/design** `SPECS-abonnement-freemium` ; **montants/cadence => patron** (ETAT §5) | spec en cours |
+> | Décision « 2 secrets vs 1 kit hardware », statut **EMI**, partenaires, dépôt | **patron** (`ETAT.md` §5) | bloqué patron |
+>
+> Les intitulés d'origine sont conservés ci-dessous (traçabilité). `/memoire-produit` n'écrit pas dans les fichiers de ces owners ; il **reflète** leur avancement.
+
+1. **Définition précise du produit** : périmètre exact des trois piliers (eSIM de secours, coffre zero-knowledge, paiement/wallet) sous « zéro perte » et zero-knowledge ; **modules définitifs = T-004**.
 2. **Appareils supportés** : plateformes cibles (mobile iOS/Android, desktop, web ?) et définition de ce qui compte comme « 1 appareil » pour le palier Gratuit.
 3. **Types de données prioritaires** : quelles données personnelles sont couvertes en premier (contacts, photos, messages, fichiers, journaux d'appels...) et dans quel ordre.
 4. **Contenu exact de chaque palier** : nombre d'appareils, quotas/stockage et fonctions incluses pour Gratuit, ~4,99 €, ~9,99 € et Famille.
@@ -122,10 +137,10 @@ Objectif : usages collectifs et modules avancés, une fois le socle et les garde
 10. **Suppression effective** : garanties et délais de suppression définitive côté serveur (principe posé ; modalités à définir). Inclut la question d'une éventuelle **récupération après suppression accidentelle** (corbeille / rétention / annulation), non tranchée.
 11. **Journal d'audit** : périmètre, contenu et accès au journal d'audit (principe posé ; spécification à définir).
 12. **Bornes de semaines V1 / V2** : délimitation exacte des jalons de la roadmap (S0-S2 -> S13+) entre MVP, V1 et V2.
-13. **Portée de « modules non clonés »** : signification opérationnelle de la décision patron « modules non clonés » (quels modules, quelles limites).
+13. **Portée des modules métier (D-01)** : périmètre opérationnel des modules définis au cadrage Infra/Sécurité (**pas de clone « BTP » de « Pilotage »**) — arrêté au **T-004**.
 14. **Stack fixée au cadrage** : périmètre précis de la stack actée au cadrage (à expliciter là où le brief reste au niveau de la décision, sans détailler les composants). Inclut la correspondance « cadrage ↔ S0 », qui est une **proposition de séquencement** et non un fait acté.
 15. **Conformité RGPD** (positionnement européen : EUR, TVA, données personnelles) : droit à l'effacement, portabilité / export des données, base légale du traitement, sous-traitance et hébergement des données — à cadrer, sans trancher ici.
 
 ---
 
-> **Rappel de gouvernance.** Tout besoin nouveau ou toute question ouverte issue de ce backlog est **routé vers /tickets** et n'est pas tranché ici. Le passage d'une ligne de backlog à une réalisation exige une décision actée en amont (reportée dans `VISION.md`).
+> **Rappel de gouvernance.** Tout besoin nouveau ou toute question ouverte issue de ce backlog est **routé vers son owner** (**/tickets**, **/securite**, **/design**, **T-004** ou **patron** — cf. table ci-dessus) et n'est pas tranché ici. Le passage d'une ligne de backlog à une réalisation exige une décision actée en amont (reportée dans `VISION.md`). `/memoire-produit` **reflète** l'avancement des autres agents ; il n'écrit que dans `orchestration/agents/memoire-produit/`.
