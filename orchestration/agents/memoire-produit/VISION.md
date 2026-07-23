@@ -1,17 +1,22 @@
 # MÉMOIRE PRODUIT — VISION (Tel-Online)
 
-> **Statut** : consolidation de la mémoire produit par le writer unique (T-008).
+> **Statut** : consolidation de la mémoire produit par le writer unique (T-008), **alignée le 2026-07-23 sur la vague 1 intégrée dans `atelier`** (cadrage Sécurité T-001/T-005, Design T-006, Infra / Registre technique T-007).
 > **Date de consolidation** : 2026-07-23.
 > **Périmètre du writer unique** : `orchestration/agents/memoire-produit/` (VISION.md, BACKLOG.md, FAIT.md). Le présent fichier ne porte que la **VISION**, le **glossaire** et les **décisions actées**. Le modèle freemium, la roadmap et les questions ouvertes vivent dans BACKLOG.md ; FAIT.md reste vide tant que rien n'est VERIFIED en production.
-> **Règle « ne rien inventer »** : ce document ne consigne que ce qui est **acté par le brief / le cadrage**. Tout besoin nouveau ou toute question ouverte est routé vers **BACKLOG.md** (propositions priorisées) ou **/tickets** (questions à instruire) — jamais tranché ici. On distingue strictement : décisions actées (§5, datées) ≠ propositions de backlog ≠ questions ouvertes (=> /tickets).
+> **Règle « ne rien inventer »** : ce document ne consigne que ce qui est **acté / spécifié par le cadrage**, avec **source**. Tout besoin nouveau ou question ouverte est routé vers son owner — **/tickets**, **/securite**, **/design** — ou vers **BACKLOG.md** ; jamais tranché ici. On distingue strictement : décisions actées (§5, datées) ≠ propositions de backlog ≠ questions ouvertes.
 >
-> **Hypothèse produit (à confirmer, NON actée => /tickets, cf. Q#1)** : service de sauvegarde / synchronisation de données personnelles à chiffrement de bout en bout garantissant « zéro perte ». Cette hypothèse oriente la lecture ; elle ne vaut pas décision.
+> **Définition produit (consolidée du cadrage vague 1 — sources citées ; matérialisation définitive au T-004 + validation patron)** : **TEL ONLINE** est un service de **continuité et de récupération « zéro perte » de la vie numérique mobile**, articulé autour de trois piliers :
+> 1. **eSIM de secours** — restauration rapide de la ligne mobile par **transfert** opérateur (GSMA RSP), **jamais par clonage** (garde-fou Sécurité T-005 ; Registre technique T-007) ;
+> 2. **coffre zero-knowledge** — mots de passe et secrets chiffrés côté client (clé **dérivée d'un secret utilisateur : phrase de récupération + biométrie**), le serveur ne détenant que du **chiffré** (Sécurité T-001 ; Registre technique T-007) ;
+> 3. **volet paiement / abonnement** — **freemium** et fonctions financières via **PSP SCA/DSP2** et **wallets certifiés**, sans jamais stocker d'OTP bancaire (garde-fous T-005 ; Registre technique T-007).
+>
+> Hébergement **UE** (résidence des données). Les **modules métier définitifs** et la **stack** sont fixés au **T-004** (Infra/Sécurité + validation patron) — voir §5.
 
 ## 1. Promesse produit — « zéro perte »
 
 **La promesse centrale de Tel-Online est simple : aucune donnée confiée par l'utilisateur ne doit jamais être perdue.** Ce que l'utilisateur confie au service reste récupérable, intact et fidèle à l'original, dans le temps et à travers ses appareils.
 
-> **Périmètre du service à confirmer** : la nature exacte du service — **sauvegarde, synchronisation, ou les deux** — n'est **pas actée**. Elle relève de la **Question ouverte #1** (=> BACKLOG.md / /tickets). La promesse « zéro perte » est énoncée indépendamment de ce périmètre.
+> **Portée de « zéro perte » (précisée par le cadrage vague 1)** : la promesse couvre les trois piliers — **continuité de la ligne** (eSIM de secours), **coffre** de secrets (zero-knowledge) et **accès comptes / paiement**. Le détail des **types de données** et le **périmètre définitif des modules** sont arrêtés au **T-004** (voir §5 et BACKLOG Q#1). La promesse « zéro perte » vaut pour l'ensemble de ces piliers.
 
 Concrètement, cette promesse implique :
 
@@ -34,10 +39,10 @@ Ce que la promesse **n'est pas** (limites honnêtes) :
 Conséquences de conception :
 
 - **Chiffrement côté client** : le chiffrement et le déchiffrement se font sur l'appareil de l'utilisateur ; le serveur ne manipule que des données chiffrées.
-- **Clés détenues par l'utilisateur** : les clés permettant de déchiffrer restent sous le contrôle de l'utilisateur et ne sont jamais transmises en clair au fournisseur.
+- **Clés dérivées côté client** : la clé qui déchiffre les données utilisateur est **dérivée sur l'appareil d'un secret utilisateur (phrase de récupération + biométrie)** ; elle ne figure **jamais** côté serveur (Sécurité T-001 ; Registre technique T-007). Le chiffrement au repos côté serveur (KMS) protège le **stockage**, mais **aucune clé serveur ne déchiffre le coffre utilisateur**.
 - **Non-accès structurel** : l'incapacité du fournisseur à lire les données est une propriété de l'architecture, pas une simple politique interne.
 
-**Tension réelle avec la récupération de compte.** Le zero-knowledge crée une tension directe avec l'expérience courante de « mot de passe oublié » : puisque le fournisseur ne détient pas les clés, il ne peut pas, par lui-même, redonner accès aux données. Cette tension **doit être résolue par des garde-fous côté utilisateur — clé ou phrase de récupération — et non par un accès fournisseur** qui romprait la promesse zero-knowledge. Autrement dit, la récupération repose sur des secrets que l'utilisateur détient et peut restaurer, jamais sur une porte dérobée. Les mécanismes précis de récupération (format de la phrase, sauvegarde assistée, récupération sociale, etc.) sont des choix d'implémentation *(=> backlog / /tickets)*.
+**Tension réelle avec la récupération de compte.** Le zero-knowledge crée une tension directe avec l'expérience courante de « mot de passe oublié » : puisque le fournisseur ne détient pas les clés, il ne peut pas, par lui-même, redonner accès aux données. Cette tension **doit être résolue par des garde-fous côté utilisateur — clé ou phrase de récupération — et non par un accès fournisseur** qui romprait la promesse zero-knowledge. Autrement dit, la récupération repose sur des secrets que l'utilisateur détient et peut restaurer, jamais sur une porte dérobée. **Cette tension est confirmée et suivie côté Sécurité** (constats **SEC-001 à SEC-004**, P0 — récupération/escrow cassant le zero-knowledge, phishing de la phrase BIP39) et **instruite par le T-002** (architecture du coffre zero-knowledge : dérivation de clé, récupération sans déchiffrement serveur), avec les SPECS `/design` *phrase-recuperation* et *recuperation-zero-perte*. Les mécanismes précis restent des choix d'implémentation *(=> /securite T-002 ; /design ; décision patron « 2 secrets vs 1 kit hardware » — cf. BACKLOG Q#7)*.
 
 **Limite : le zero-knowledge porte sur le contenu.** Le principe garantit la non-connaissance du **contenu en clair**, mais **pas nécessairement celle des métadonnées** qu'un service peut observer malgré le chiffrement (tailles, horodatages, nombre et fréquence d'objets, adresses IP, etc.). Un lecteur ne doit pas comprendre « zero-knowledge » comme « le fournisseur ne sait rien ». La **minimisation et la protection des métadonnées** constituent un principe distinct, dont le périmètre relève du backlog *(=> /tickets)*.
 
@@ -52,6 +57,18 @@ Les garde-fous ci-dessous sont des **principes de conception** qui découlent di
 - **Redondance des copies** : les données chiffrées sont conservées en plusieurs exemplaires, de sorte qu'un incident isolé n'entraîne jamais de perte définitive. *(niveau de redondance et répartition => backlog / /tickets)*
 - **Suppression effective** : lorsqu'un utilisateur supprime une donnée, la suppression est réellement appliquée à l'ensemble des copies, dans un délai maîtrisé. *(portée exacte, corbeille / rétention et délai => à préciser => /tickets)*
 - **Journal d'audit** : les opérations sensibles (accès, modifications de configuration de sécurité, suppressions) sont journalisées de manière vérifiable par l'utilisateur, sans compromettre le zero-knowledge. *(contenu, portée et exposition du journal => backlog / /tickets)*
+
+### Garde-fous produit actés — Sécurité (T-005, règles à veto Release)
+
+> Source : `_REGLES-COMMUNES.md` (« Garde-fous produit TEL ONLINE ») et `securite/REGISTRE.md`. Ces règles sont **actées** : toute violation ouvre un **SEC-### P0** et **bloque la Release** (R10). Elles sont **possédées par `/securite`** ; la mémoire produit les **reflète** (elle ne les modifie pas).
+
+- **Aucun OTP bancaire (3-D Secure) intercepté ni stocké** : l'authentification forte **SCA/DSP2** et le 3DS2 sont **délégués au PSP** ; l'utilisateur reçoit lui-même ses OTP légitimes.
+- **eSIM = transfert opérateur, jamais clonage** : provisioning via **GSMA RSP** (SM-DP+), sans duplication de profil.
+- **Aucun mot de passe / secret en clair** : les secrets ne vivent que dans le **coffre chiffré zero-knowledge**.
+- **Tout flux financier ⇒ KYC/AML** à cadrer avec la conformité (=> /securite T-003).
+- **Chiffrement authentifié & intégrité du coffre** : AEAD, anti-rollback / anti-troncature des sauvegardes (constats SEC-011/012). *(détail => /securite)*
+
+> **État sécurité (à J0).** La Sécurité a ouvert **42 constats SEC-### (18 P0)** au cadrage (T-001/T-005) ⇒ **VETO Release actif** tant qu'un P0 reste ouvert. Détail : `securite/REGISTRE.md` (writer unique `/securite`).
 
 > **Tensions de conception à arbitrer (=> /tickets).** Ces garde-fous ne sont pas orthogonaux ; plusieurs sont en tension directe : (a) **Redondance des copies** ↔ **Suppression effective** (effacer de façon fiable toutes les répliques) ; (b) **versionnage / sauvegardes incrémentales** ↔ **Suppression effective** (purger effectivement l'historique) ; (c) **Journal d'audit** ↔ **zero-knowledge** (le journal peut exposer des métadonnées au fournisseur). Ces arbitrages sont routés vers le backlog / /tickets, non tranchés ici.
 
@@ -79,6 +96,17 @@ Les garde-fous ci-dessous sont des **principes de conception** qui découlent di
 | **« Sx » (semaine / sprint de la roadmap)** | Notation désignant une étape de la roadmap, où « x » est le numéro de la semaine ou du sprint (par exemple S0, S1, S13). |
 | **VERIFIED (au sens de FAIT.md)** | Statut réservé aux éléments effectivement vérifiés en production ; seul un élément VERIFIED peut figurer dans FAIT.md. |
 | **/tickets** | Destination de routage des besoins nouveaux et des questions ouvertes, non tranchés dans la mémoire produit et à instruire séparément. |
+| **eSIM de secours** | Profil eSIM permettant de **restaurer rapidement la ligne mobile** sur un appareil, par **transfert** opérateur (GSMA **RSP**, flux SM-DP+), **jamais par clonage** (garde-fou Sécurité). |
+| **GSMA RSP (SGP.22)** | Standard de *Remote SIM Provisioning* utilisé pour provisionner/transférer un profil eSIM via un serveur **SM-DP+** ; base technique de l'eSIM de secours (Registre technique T-007). |
+| **Coffre zero-knowledge** | Espace chiffré où sont conservés mots de passe et secrets ; la clé est **dérivée côté client** (phrase de récupération + biométrie) et le serveur ne voit que du **chiffré** (Sécurité T-001/T-002). |
+| **Phrase de récupération** | Secret utilisateur (type BIP39) servant à **dériver la clé** du coffre et à récupérer l'accès sans déchiffrement serveur ; point sensible (cf. SEC-004). |
+| **Mot de passe maître / biométrie** | Facteurs de déverrouillage local du coffre ; combinaison exacte des secrets (**« 2 secrets » vs « 1 kit hardware-backed »**) = **décision patron ouverte** (ETAT §5). |
+| **SCA / DSP2 · 3-D Secure (3DS2)** | Cadre européen d'authentification forte des paiements ; **délégué au PSP** — TEL ONLINE **ne stocke aucun OTP bancaire** (garde-fou T-005). |
+| **PSP / wallet / EMI** | Prestataire de services de paiement, portefeuilles certifiés (Apple/Google Pay) ; statut d'**émetteur de monnaie électronique (EMI)** = décision de conformité ouverte (ETAT §5.5b ; => /securite T-003). |
+| **KYC / AML** | Contrôles d'identité et de lutte anti-blanchiment applicables à tout **flux financier** ; à cadrer en conformité (=> /securite T-003). |
+| **Hébergement UE / résidence des données** | Exigence que le stockage, la base et le coffre de secrets soient **en Union européenne** (RGPD) — posée au Registre technique (T-007). |
+| **SEC-### / veto Release** | Identifiant d'un constat de sécurité (registre `/securite`) ; un **SEC-### P0** ouvert **bloque toute mise en production** (R10). |
+| **Canaux officiels** | Principe : les intégrations passent par les **API/officiels des fournisseurs** (OAuth/OIDC, GSMA RSP, PSP DSP2), jamais par contournement (Registre technique T-007). |
 
 ## 5. Décisions actées (patron)
 
@@ -95,8 +123,8 @@ Les garde-fous ci-dessous sont des **principes de conception** qui découlent di
 - **Intitulé** : Modules non clonés.
 - **Date** : cadrage (date exacte à confirmer) ; consignée le 2026-07-23.
 - **Source** : cadrage patron.
-- **Énoncé (strict, tel que mandaté)** : On ne clone pas de modules — les modules ne sont pas clonés / dupliqués.
-- **Portée à préciser => /tickets (cf. Q#13)** : toute interprétation opérationnelle n'est **pas** actée — notamment la notion de « module en un seul exemplaire de référence », la « réutilisation », la distinction entre « module cloné » et « module écrit à neuf », et la portée exacte du principe. Ces lectures relèvent des /tickets.
+- **Énoncé (officiel, cadrage)** : les **modules métier** sont **définis au cadrage Infra/Sécurité** — **pas de clone « BTP » de « Pilotage »** (source : skill `/memoire-produit` ; `ETAT.md` §0). Le dispositif transverse (9 agents) est cloné de *Pilotage*, mais **pas** les modules métier.
+- **Matérialisation** : le périmètre définitif des modules métier est arrêté au **T-004** (`/module-infra` + `/securite`, après T-001/002/003 🟢 **+ validation patron**). Portée fine encore ouverte => BACKLOG Q#13.
 
 ### D-02 — Stack fixée au cadrage
 
@@ -104,9 +132,9 @@ Les garde-fous ci-dessous sont des **principes de conception** qui découlent di
 - **Intitulé** : Stack technique fixée au cadrage.
 - **Date** : cadrage (date exacte à confirmer) ; consignée le 2026-07-23.
 - **Source** : cadrage patron.
-- **Énoncé (strict, tel que mandaté)** : La stack technique est fixée au cadrage (et non plus tard). Elle sert de socle stable au reste de la roadmap.
-- **Portée à préciser => /tickets** : la **correspondance cadrage ↔ S0** n'est **pas** actée (elle est une proposition de séquencement => backlog / /tickets). Le détail de la stack n'est pas fourni ici => /tickets si un besoin de documentation apparaît.
+- **Énoncé (officiel, cadrage)** : la **stack technique est laissée au cadrage Infra/Sécurité (S0–S2)** (source : skill `/memoire-produit` ; `ETAT.md` §0). Elle sert de socle stable au reste de la roadmap.
+- **Matérialisation** : le choix définitif de la stack est arrêté au **T-004** (avec les modules métier, sur validation patron). Le Registre technique (T-007) en pose déjà les intégrations via **canaux officiels** (OAuth/OIDC, GSMA RSP, PSP DSP2, hébergement UE). Détail stack => BACKLOG Q#14.
 
 ---
 
-**Renvoi des questions ouvertes.** Toute question ouverte (périmètre du service — sauvegarde / synchronisation / les deux ; corbeille et rétention ; mécanismes de récupération ; niveau de redondance ; protection des métadonnées ; conformité RGPD — droit à l'effacement, portabilité / export, base légale, sous-traitance ; cadence de facturation ; interprétation opérationnelle des décisions ; etc.) ainsi que toute **proposition priorisée** figurent dans **BACKLOG.md** et sont routées vers **/tickets**. Aucune n'est tranchée dans le présent fichier. **FAIT.md** reste vide tant qu'aucun élément n'est **VERIFIED** en production.
+**Renvoi des questions ouvertes.** Toute question ouverte (périmètre / modules définitifs & stack => **T-004** ; coffre zero-knowledge & récupération => **/securite T-002** ; conformité RGPD/DSP2/KYC-AML => **/securite T-003** ; paliers & cadence freemium => **/design** ; décisions patron — dépôt, partenaires eSIM/paiement/hébergeur, « 2 secrets vs kit hardware », statut EMI => **ETAT.md §5**) ainsi que toute **proposition priorisée** figurent, avec leur routage, dans **BACKLOG.md**. Aucune n'est tranchée dans le présent fichier. **FAIT.md** reste vide tant qu'aucun élément n'est **VERIFIED** en production.
