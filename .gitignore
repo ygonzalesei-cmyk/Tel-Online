@@ -1,0 +1,24 @@
+# Dispositif d'orchestration TEL ONLINE — dépôt de pilotage (docs/markdown).
+# La stack technique des modules métier est cadrée en S0–S2 (Infra/Sécurité).
+
+# Environnement / secrets (NOMS uniquement dans REGISTRE-TECH.md, jamais les valeurs)
+.env
+.env.*
+!.env.example
+
+# Journaux
+logs/
+*.log
+
+# Dépendances / build (si une stack est ajoutée plus tard par un module)
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# OS / éditeurs
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
