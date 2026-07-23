@@ -1,71 +1,27 @@
-# Rapport — Pôle Design · Mission T-006
+# Rapports — Pôle Design (journal anti-chronologique, R6)
 
-| | |
-|---|---|
-| **Mission** | T-006 — Charte UX + SPECS des écrans sensibles de TEL ONLINE |
-| **Branche de dev** | `claude/design-cmnaxa` |
-| **Cible PR** | `atelier` (jamais `main`) |
-| **Date** | 2026-07-23 |
-| **Statut global** | 🟢 **Livrables produits, poussés et PR draft ouverte vers `atelier`** ([PR #2](https://github.com/ygonzalesei-cmyk/Tel-Online/pull/2)) |
+> Format imposé : `_CONTRAT-RAPPORT.md`. Entrée la plus récente en haut.
 
----
-
-## 🟢 Livrables produits (périmètre `orchestration/agents/design/`)
-
-| Fichier | Contenu | Taille |
-|---|---|---|
-| `CHARTE-UX.md` | **Charte UX socle v0.2** : principes grand public, mobile-first, WCAG 2.2 AA, i18n dès le départ, offline-first, perf, sécurité UX, tokens à contrastes **calculés**, verrouillage du coffre, glossaire. | ~320 l. |
-| `SPECS-onboarding-coffre.md` | Onboarding + création du coffre (valeur → protection locale → coffre prêt), permissions différées, verrouillage, offline. | ~596 l. |
-| `SPECS-phrase-recuperation.md` | Phrase de récupération : affichage sécurisé, sauvegarde papier, vérification non-cognitive (3.3.8), report avec rappel du risque. | ~477 l. |
-| `SPECS-recuperation-zero-perte.md` | Configuration des facteurs (phrase + SIM numérique/SMS + sauvegarde chiffrée + contacts de confiance) **et** récupération guidée sans cul-de-sac. | ~581 l. |
-| `SPECS-esim-secours.md` | Carte SIM numérique de secours : compatibilité, activation guidée, états réseau, quota, usage en récupération. | ~534 l. |
-| `SPECS-abonnement-freemium.md` | Offre gratuite / premium : comparaison transparente (sans dark patterns), passage premium, résiliation aussi simple que la souscription. | ~572 l. |
-| `../rapports/design.md` | Le présent rapport. | — |
-
-**Périmètre respecté** : écriture uniquement sous `orchestration/agents/design/` (+ ce rapport). **Aucune modification de code** (R12) ; les maquettes sont des **wireframes textuels**, les i18n des **tables clé→texte**. Lecture seule sur le code (au demeurant, le dépôt était vide).
+## [2026-07-23] T-010 — Alignement SPECS ↔ modèle de menace + arbitrages Q1–Q8
+- **Feu** : 🟢 READY_FOR_PUSH
+- **Périmètre touché** : `orchestration/agents/design/` — MAJ des 4 SPECS sensibles (`SPECS-onboarding-coffre.md`, `SPECS-phrase-recuperation.md`, `SPECS-recuperation-zero-perte.md`, `SPECS-esim-secours.md` : section « Alignement modèle de menace (T-010) ») + création `ALIGNEMENT-MENACE.md` ; ce rapport. **Un seul writer respecté** (design) ; **lecture seule** sur `securite/` et le code.
+- **Fait** : pour chaque écran sensible, la mesure UX contre les 4 vecteurs — (1) **capture d'écran par plateforme** (Android bloque / iOS occulte l'aperçu multitâche + détecte) ; (2) **overlay/tapjacking** (masquage + appuis obscurcis ignorés + détection de partage d'écran) ; (3) **phishing de la seed** (jamais saisie en ligne, vérif 100 % locale, pédagogie, notif hors-bande signée, jamais de SMS) ; (4) **autofill/presse-papiers** (clavier sécurisé, exclusion de l'autofill tiers, presse-papiers local + effacement). **Table de traçabilité menace↔UX** vers les SEC-### P0 « UX » + garde-fous VETO, **matrice écran×vecteur**, et **fiche décisions Q1–Q8** pour le patron (dans `ALIGNEMENT-MENACE.md`).
+- **Preuve** : branche `claude/design-cmnaxa` (base `origin/atelier`) — commit `8424c27` — **PR draft #10 → `atelier`** (https://github.com/ygonzalesei-cmyk/Tel-Online/pull/10). Vérif : 4 SPECS portent la section T-010 (réfs SEC-### : 11–14 par fichier) ; `ALIGNEMENT-MENACE.md` créé (traçabilité + Q1–Q8).
+- **Tests (R8)** : **humains obligatoires** (revue en atelier de l'alignement UX + arbitrage Q1–Q8) ; **semi-auto** (relecture accessibilité WCAG des nouvelles mesures) ; **aucun test automatisable** (spécification documentaire, aucun code — R12).
+- **Sécurité** : aucun impact zero-knowledge négatif ; l'alignement **renforce** la posture UX (SEC-004 P0 phishing seed, SEC-025/026 capture/presse-papiers, SEC-005/006 SIM-swap, SEC-018 biométrie). **Ne lève aucun P0** : les P0 restent ouverts côté **implémentation** (routés sécurité/mobile). Aucune mesure ne dégrade WCAG 2.2 AA.
+- **Décisions nécessaires (R7)** — routées **patron** (ne bloquent pas la mission) : **Q2/Q3 — un seul kit de récupération vs deux secrets** (reco Design : **kit unique**, le double secret alimente le phishing SEC-004 et le DoS de verrouillage) ; **Q4/Q5** quota de la SIM de secours en offre gratuite ; **Q7** conformité (KYC/AML, RGPD Art. 9/22, PCI, PVID/eIDAS) ; **Q8** périmètre e-money (EMI/EMD2). Détail complet : `ALIGNEMENT-MENACE.md` §4.
+- **Reste à faire / prompt de reprise** : après arbitrage Q1–Q8, mettre à jour les SPECS selon la décision (surtout un/deux secrets) ; décliner l'UX des flux sensibles pour le **client web/PWA** (routage Design + Infra).
+- **Routage** : `securite` (implémentation des mécanismes : FLAG_SECURE, détection overlay/partage d'écran, liaison autofill au package/origine, pinning SM-DP+, signature d'intention matérielle) ; `patron` (arbitrage Q1–Q8) ; modules `mobile`/`infra` (réalisation).
 
 ---
 
-## 🟢 Méthode & qualité
-
-- **Charte rédigée en premier** (document socle), avec une **palette de tokens dont chaque ratio de contraste a été calculé** (WCAG AA/AAA).
-- **Orchestration multi-agents** : pour chaque SPEC, pipeline **rédaction → audit adversarial → révision** ; la **charte** a elle-même été auditée. 16 agents, 0 erreur.
-- **15 corrections d'audit appliquées à la charte** (passage v0.1 → **v0.2**), dont :
-  - 🔴→✅ **Verrouillage/déverrouillage du coffre** (§10.1) + **8ᵉ état d'écran « Verrouillé »** (§13).
-  - 🔴→✅ **Divulgation privée des secrets** au lecteur d'écran (casque, lecture mot-à-mot, pas de région *live* sur un secret) (§5.3).
-  - 🟠→✅ **Palette sombre** complétée et **recalculée** ; correction du piège lien vs bouton (`#6AA6FF` ne peut pas porter de texte blanc) (§11.2).
-  - 🟠→✅ **Capture d'écran réaliste par plateforme** (Android bloque, iOS ne peut que détecter) + masquage de l'aperçu multitâche + presse-papiers inter-appareils (§10).
-  - 🟠→✅ **Champ d'affichage vs de saisie** d'un secret et conformité **WCAG 3.3.8** (collage autorisé pour la saisie) (§10, §5.4).
-  - 🟠→✅ **i18n** : 6 catégories de pluriel ICU (arabe), isolation **bidi**, système de chiffres par locale, expansion par plage de longueur (§6).
-  - 🟠→✅ **Citations WCAG corrigées** (2.4.13 pour l'apparence du focus) et critères ajoutés (2.5.7, 3.2.6, 1.4.13, 1.3.5, 2.4.1).
-  - 🟠→✅ **Tous les renvois de section** rectifiés (bug de numérotation) + harmonisation terminologique.
-- **Vérification finale des SPECS** : aucun bloc de code applicatif, aucun jargon à l'écran, structure complète (16 sections), points de sécurité critiques présents, alignement terminologique avec la charte.
-
----
-
-## 🟢 Livraison
-
-- Branche **`claude/design-cmnaxa`** rebasée sur **`origin/atelier`** (base d'intégration), puis poussée.
-- **PR draft** ouverte : **`claude/design-cmnaxa` → `atelier`** (jamais `main`) — [PR #2](https://github.com/ygonzalesei-cmyk/Tel-Online/pull/2). Le diff correspond **exactement** aux 7 fichiers de design (~3213 lignes ajoutées, rien d'autre).
-
-> **Note sur le 403 initial.** À la première passe, le dépôt distant était **vide/non initialisé** (aucune branche `main`/`atelier`), ce qui rendait tout push impossible (403) — signalé à l'époque plutôt que contourné. Depuis, l'orchestrateur a amorcé `atelier` ; le push et la PR fonctionnent désormais normalement, **sans action manuelle requise**.
-
----
-
-## ⚠️ Notes & décisions
-
-- **`/design`** : c'est une **commande CLI intégrée**, non chargeable par l'outil `Skill` (le système demande à l'utilisateur de la lancer). J'ai donc appliqué les bonnes pratiques UX/accessibilité directement (R7 : pas de blocage).
-- **Amorçage `atelier`** : une branche `atelier` locale a été préparée à partir d'un commit racine, en vue de servir de base à la PR ; sa publication attend l'accès en écriture.
-- **Hypothèses produit** `HYP-1`…`HYP-5` (charte §1) : formulées par le Design pour la cohérence des maquettes, **à confirmer par le pôle Produit**.
-
-## Questions ouvertes (renvoi charte §17)
-`Q1` hypothèses produit · `Q2` longueur/vocabulaire de la phrase · `Q3` facteurs de récupération & priorité · `Q4`/`Q5` périmètre gratuit vs premium & quota SIM de secours · `Q6` langues + système de chiffres · `Q7` contraintes réglementaires (KYC/RGPD) · `Q8` périmètre « valeur/argent ».
-
-## Prochaines étapes proposées
-1. ✅ Branche poussée et **PR draft ouverte vers `atelier`** ([PR #2](https://github.com/ygonzalesei-cmyk/Tel-Online/pull/2)).
-2. Revue en atelier de la charte v0.2 et des 5 SPECS ; trancher `Q1`…`Q8`.
-3. Décliner les maquettes visuelles à partir des tokens validés.
-
----
-
-*Rapport généré par le pôle Design (session DESIGN). Livrables : `orchestration/agents/design/CHARTE-UX.md` + `SPECS-*.md`.*
+## [2026-07-23] T-006 — Charte UX + SPECS des écrans sensibles
+- **Feu** : 🟢 READY_FOR_PUSH — **livré et fusionné** (PR #2 mergée dans `atelier`).
+- **Périmètre touché** : `orchestration/agents/design/CHARTE-UX.md` (v0.2) + 5 `SPECS-*.md` + ce rapport. Un seul writer (design).
+- **Fait** : **charte socle** (mobile-first, WCAG 2.2 AA à **contrastes calculés**, i18n dès le départ dont **AR-RTL**, offline-first, sécurité UX, verrouillage du coffre, glossaire) + **5 SPECS** (onboarding coffre, phrase de récupération, récupération sans perte, carte SIM numérique de secours, abonnement gratuit/premium). Méthode : rédaction → **audit adversarial** → révision ; **15 défauts corrigés** sur la charte (v0.1 → v0.2).
+- **Preuve** : PR **#2** `claude/design-cmnaxa → atelier`, **fusionnée** ; commits `0fe8347`, `15dff24`, `db815eb`.
+- **Tests (R8)** : **humains obligatoires** (revue atelier) ; aucun code (R12) ; contrastes de tokens **calculés/vérifiés**.
+- **Sécurité** : sécurité UX intégrée (anti-capture réaliste par plateforme, divulgation privée des secrets au lecteur d'écran, presse-papiers inter-appareils, conformité 3.3.8). Alignement formel au modèle de menace fait en **T-010**.
+- **Décisions nécessaires (R7)** : Q1–Q8 (repris et enrichis en T-010).
+- **Note livraison** : le 403 initial venait du dépôt **non initialisé** ; résolu une fois `atelier` amorcé.
+- **Routage** : `securite` (→ T-010), `patron` (Q1–Q8).

@@ -532,3 +532,46 @@ Budgets charte §9 (mobile d'entrée de gamme, réseau lent) :
 - **QS-1 (spécifique — comportement fixé, reste à paramétrer) —** Le **défaut est Manuel** et le mode **Automatique n'engage aucune consommation payante sans confirmation** (invariant posé). Reste à trancher avec Produit **la valeur du seuil X** (`{seuil}`) et son libellé exact. **Non bloquant pour le comportement par défaut.**
 - **QS-2 (spécifique — invariant posé) —** La **réception d'un code de secours reste prioritaire et garantie même à quota nul** (canal de contrôle hors quota, `HYP-4`) : c'est un **invariant de conception**, pas une question ouverte. Reste à confirmer avec Produit/Opérateur (`Q7`) les **modalités techniques** de mise en œuvre.
 - **QS-3 (spécifique) —** Périmètre exact du **format d'opérateur localisé** (afficher un nom d'opérateur ? le masquer pour raisons de confidentialité/log ?) — à arbitrer avec §9 (aucune fuite).
+
+---
+
+## Alignement modèle de menace (T-010)
+
+> Ajout T-010 : le transfert/activation de la **carte SIM numérique de secours** **EST** la primitive de **SIM-swap** (SEC-005/006/007, P0). Alignement sur `../securite/MODELE-MENACE.md`. On **spécifie la mesure UX** ; mécanismes (pinning SM-DP+, signature d'intention matérielle, liaison EID↔compte) **routés** (R12). **WCAG 2.2 AA maintenu**. Traçabilité : `ALIGNEMENT-MENACE.md`.
+
+### Capture d'écran (par plateforme) — SEC-025 (P1) · SEC-030 · VETO-V14
+- L'écran affichant le **code / QR d'activation** est **écran protégé** (le code est à usage unique mais ne doit pas fuiter via capture, log ou partage d'écran — SEC-030) : **Android** bloque ; **iOS** occulte l'aperçu multitâche + détecte. Aucun SDK tiers (VETO-V6).
+
+### Overlay / tapjacking — SEC-004 (P0) · angle mort D.1 (partage d'écran / RAT)
+- Le transfert/activation est une **action sensible** : **détection d'overlay et de partage d'écran** → masquage + avertissement ; **appuis obscurcis ignorés** sur la validation du transfert (anti-tapjacking).
+
+### Phishing / quishing des codes — SEC-030 (P1) · SEC-007 (P0) · VETO-V24
+- Le **QR / code d'activation** provient **uniquement du canal in-app légitime** — **jamais** scanné depuis un e-mail, un SMS ou un site (anti-**quishing**).
+- Profil **lié au compte + à l'appareil (EID)** ; code **à usage unique, non rejouable** ; adresse **SM-DP+ authentifiée** (pinning — mécanisme routé).
+- Aucune action d'activation déclenchée automatiquement par un lien/deep link non vérifié (VETO-V24).
+
+### SIM-swap / transfert d'appareil — SEC-005/006 (P0) · VETO-V2 · V11 · V19
+- **Confirmation hors-bande signée + cooldown + gel financier post-transfert** ; **step-up phishing-resistant** (passkey) lié à l'**ancien appareil**.
+- **WYSIWYS** : l'écran de confirmation affiche **exactement** ce qui est signé (**EID + appareil cible**) — pas d'altération possible après validation (VETO-V19).
+- Le **numéro / SMS n'est jamais un facteur d'authentification** (VETO-V11) ; **profil unique** (pas de clone — VETO-V2).
+- **Notification** de tout **portage sortant** et **changement de renvoi d'appel / messagerie vocale** (angle mort D.1, P0).
+
+### Autofill / presse-papiers — SEC-026 (P1) · VETO-V14
+- Le **code d'activation** n'est **pas copié** vers un presse-papiers synchronisé ; si une copie in-app est nécessaire → **presse-papiers local + effacement automatique**.
+
+### Confidentialité des notifications — SEC-042 (P2)
+- Aucune notification n'expose un **code d'activation** ou un OTP sur l'écran verrouillé ; contenu sensible révélé **après déverrouillage**.
+
+### Accessibilité maintenue (WCAG 2.2 AA)
+- Le **QR a toujours une alternative** (saisie manuelle du code) accessible ; états réseau **honnêtes** et lisibles au lecteur d'écran ; confirmations et avertissements (overlay, hors-bande) accessibles et en langage clair.
+- Le **paradoxe offline** (l'activation peut exiger une connexion) reste géré comme dans la SPEC (alternatives explicites).
+
+### Traçabilité (extrait)
+| SEC-### / VETO | Mesure UX ici | Statut |
+|---|---|---|
+| **SEC-005/006/007 (P0)** · V2 · V19 | Confirmation hors-bande signée + cooldown + WYSIWYS ; profil unique | ➕ T-010 |
+| SEC-030/034 · V24 | Anti-quishing (QR in-app only), code usage unique, lié compte+appareil | ➕ T-010 |
+| D.1 port-out / renvoi d'appel (P0) | Verrou de portage + notifications | ➕ T-010 |
+| SEC-025 · SEC-026 · V14 | Anti-capture/anti-overlay du code, presse-papiers local | ➕ T-010 |
+| SEC-042 | Pas de code/OTP en notification sur écran verrouillé | ➕ T-010 |
+| VETO-V11 | Numéro/SMS jamais facteur d'authentification | ➕ T-010 |

@@ -475,3 +475,38 @@ Dérivé de la charte §10.
 - **QP-5** — Articulation avec `SPECS-recuperation-zero-perte.md` : cette phrase est **un** facteur ; faut-il enchaîner directement vers les autres facteurs après E5 ?
 
 *Lien de parcours : entrée depuis `SPECS-onboarding-coffre.md` ; suite possible vers `SPECS-recuperation-zero-perte.md`. Aucun contenu de ces SPECS n'est dupliqué ici.*
+
+---
+
+## Alignement modèle de menace (T-010)
+
+> Ajout T-010 : traçage explicite de cet écran (le plus sensible) vers `../securite/MODELE-MENACE.md`. **SEC-004 (P0)** — phishing de la phrase — est le constat central. On **spécifie la mesure UX** ; les mécanismes sont **routés** (R12). **WCAG 2.2 AA maintenu**. Traçabilité : `ALIGNEMENT-MENACE.md`.
+
+### Capture d'écran (par plateforme) — SEC-025 (P1) · VETO-V14 · VETO-V6
+- Déjà spécifié (affichage E2, revue en E4). **Tracé** vers SEC-025/VETO-V14 : **Android** bloque capture/enregistrement/aperçu multitâche ; **iOS** ne peut que **détecter** → **re-masquage immédiat** + avertissement, et **occultation de l'aperçu multitâche**.
+- **Aucun SDK tiers** (session-replay/crash) sur l'écran de phrase (VETO-V6).
+
+### Overlay / tapjacking — SEC-004 (P0) · angle mort D.1 (partage d'écran / RAT)
+- **Ajout T-010 :** pendant l'affichage (E2) et la vérification (E4), **détection d'une sur-couche (overlay) ou d'un partage/enregistrement d'écran** → **masquage immédiat** de la phrase + avertissement.
+- **Anti-tapjacking :** les **appuis obscurcis sont ignorés** sur les commandes « Afficher » et de validation (empêche un overlay de capter l'action ou de faire révéler la phrase à l'insu de l'utilisateur).
+
+### Phishing de la seed — SEC-004 (P0) · VETO-V15 · VETO-V11
+- La phrase **n'est JAMAIS saisie en ligne** ni **demandée par le support** ni **envoyée au serveur** ; la **vérification (E4) est 100 % locale** (re-dérivation cliente — **aucune API n'accepte la phrase**).
+- **Pédagogie anti-phishing persistante** : « Personne — pas même TEL ONLINE — ne vous demandera jamais votre phrase. »
+- **Notifications hors-bande signées** sur toute opération de récupération/rotation ultérieure (renvoi `SPECS-recuperation-zero-perte.md`) ; **jamais de SMS/appel** comme canal de confiance (VETO-V11).
+
+### Autofill / presse-papiers — SEC-026 (P1) · VETO-V14 · angle mort D.1 (autofill)
+- Déjà spécifié : **copie désactivée par défaut**, presse-papiers **cloud/historique/inter-appareils exclus**, clavier sécurisé, aperçu du dernier caractère désactivé.
+- **Ajout T-010 :** le **champ de saisie** de vérification (E4) est **exclu de l'autofill** (aucune proposition de remplissage de la phrase), **pas de fuzzy-match** ; le collage y est **interdit** (l'intégrité repose sur une transcription papier indépendante).
+
+### Accessibilité maintenue (WCAG 2.2 AA)
+- **Divulgation privée** au lecteur d'écran déjà spécifiée (avertissement « casque », lecture mot à mot à la demande, pas de région live sur le secret) — cohérente avec SEC-025.
+- L'avertissement d'overlay est **annoncé en région live assertive** ; l'alternative de vérification **« choisir dans une liste »** (reconnaissance, conforme **3.3.8**) reste disponible.
+
+### Traçabilité (extrait)
+| SEC-### / VETO | Mesure UX ici | Statut |
+|---|---|---|
+| **SEC-004 (P0)** · V15 · V11 | Jamais en ligne, vérif locale, pédagogie, notif hors-bande | ✅ + tracé |
+| SEC-025 · V14 · V6 | Anti-capture par plateforme, occultation, pas de SDK tiers | ✅ + tracé |
+| SEC-004 · D.1 | Détection overlay/partage d'écran + anti-tapjacking | ➕ T-010 |
+| SEC-026 · V14 · D.1 | Copie off, autofill exclu, clavier sécurisé, pas de fuzzy-match | ✅ + ➕ |
