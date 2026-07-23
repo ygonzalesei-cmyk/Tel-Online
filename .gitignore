@@ -6,6 +6,9 @@
 .env.*
 !.env.example
 
+# Fichier de travail interne de l'orchestrateur (source du prompt maître)
+.spec-source.md
+
 # Journaux
 logs/
 *.log

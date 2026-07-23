@@ -17,7 +17,8 @@
 | **T-008** | **Mémoire produit** : VISION + glossaire + **backlog** initial (MVP→V1→V2, freemium) | `/memoire-produit` | P1 | EN COURS | — (lançable) |
 
 ## Fiches détaillées
-Les fiches `T-###.md` sont créées et maintenues par **/tickets** (critères d'acceptation, contexte, historique).
+Fiches seedées au bootstrap (critères d'acceptation posés), maintenance cédée à **/tickets** :
+[`T-001`](T-001.md) · [`T-002`](T-002.md) · [`T-003`](T-003.md) · [`T-004`](T-004.md) · [`T-005`](T-005.md) · [`T-006`](T-006.md) · [`T-007`](T-007.md) · [`T-008`](T-008.md).
 
 ## Bloqués patron
 Voir `../ETAT.md` §5 (dépôt, partenaires, conformité, accès/secrets).

@@ -31,8 +31,10 @@ depuis n'importe quel appareil, toute sa vie numérique **+ une ligne mobile (eS
 
 ## Branches
 - **`atelier`** — intégration commune (cible des PR).
-- **`main`** — PROD (**seul Release** y déploie depuis `atelier`).
+- **`main`** — PROD, **créée par Release** au 1er déploiement (`atelier → main`) ; **seul Release** y déploie. *(N'existe pas encore : aucun déploiement à ce stade.)*
 - **`claude/<nom>`** — branche de travail d'une session.
+
+Parité du clonage : voir [`orchestration/PARITE.md`](orchestration/PARITE.md) (9/9 transverses identiques).
 
 ## Sécurité (non négociable)
 Coffre **zero-knowledge** ; récupération « zéro perte » **sans déchiffrement serveur** ; intégrations

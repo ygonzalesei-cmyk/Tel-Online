@@ -4,10 +4,11 @@
 > Rappel : l'orchestrateur **produit des prompts** et **lit les rapports** ; il n'exécute rien.
 
 ## 0. Dispositif
-- **Dispositif cloné à l'identique** de *Pilotage* : **9 agents transverses** opérationnels (skills créés).
+- **Dispositif cloné à l'identique** de *Pilotage* : **9 agents transverses** opérationnels (skills créés). Voir le **tableau de parité** : [`PARITE.md`](PARITE.md) (**9/9 identiques**).
 - **Modules métier** : **NON clonés** (décision patron) → définis au **cadrage S0–S2** (Infra + Sécurité), créés après **validation patron**.
 - **Stack technique** : laissée au **cadrage S0–S2** (Infra + Sécurité).
-- Branches : **`atelier`** (intégration) créée ; **`main`** (PROD) réservée à **Release** ; travail sur `claude/<nom>`.
+- **Gabarit de dispatch** : [`MODELE-PROMPT-AGENT.md`](MODELE-PROMPT-AGENT.md).
+- Branches : **`atelier`** (intégration, base des PR) ; **`claude/<nom>`** pour le travail. **`main` (PROD) n'existe pas encore** : elle sera **créée par Release** au 1er déploiement (`atelier → main`, S3+) — conforme au « seul Release fait `atelier → main` ».
 
 ## 1. Qui bosse où
 | Session | Skill | Branche | Mission en cours | Feu |
@@ -26,7 +27,8 @@
 Bootstrap du dispositif terminé → **1re vague de prompts** = **cadrage sécurité/conformité S0–S2** (rails à fichiers disjoints, parallélisme sûr).
 
 ## 3. Tickets en vol
-Voir `tickets/INDEX.md`. Actifs J0 : **T-001, T-005** (Sécurité), **T-006** (Design), **T-007** (Infra), **T-008** (Mémoire), + formalisation par **/tickets**.
+Voir [`tickets/INDEX.md`](tickets/INDEX.md). **Fiches `T-001`→`T-008` seedées** (critères d'acceptation posés), maintenance cédée à **/tickets**.
+Actifs J0 : **T-001, T-005** (Sécurité), **T-006** (Design), **T-007** (Infra), **T-008** (Mémoire), + formalisation/priorisation par **/tickets**.
 
 ## 4. Prochaines étapes / déclencheurs (prompts NON affichés tant que le déclencheur n'est pas réalisé)
 | Prompt en attente | Déclencheur (condition) |
