@@ -3,6 +3,35 @@
 > Format : `../\_CONTRAT-RAPPORT.md`. Le plus récent en haut. Feu 🟢 `READY_FOR_PUSH` / 🔴 `BLOCKED_*` (R6).
 > Writer de `../tickets/` (INDEX + fiches T-###). **Clôture = commit précis + verdict QA** (anti-récidive).
 
+## [2026-07-23] Sync vague 2 — T-002/T-003/T-009/T-010 🟢 livrés ; T-004 n'attend que le patron
+- **Feu** : 🟢 READY_FOR_PUSH
+- **Périmètre touché** : `orchestration/tickets/` (INDEX + T-002/T-003/T-004/T-009/T-010) + ce rapport. **Writer unique respecté** ; `../ETAT.md` et les rapports/PR des autres agents **lus seulement**.
+- **Fait** :
+  - **États synchronisés** (preuve = PR ouvertes) : **T-002** (PR #8), **T-003** (PR #13), **T-009** (PR #9), **T-010** (PR #10) → **🟢 EN RECETTE (livré)**. Vague 2 = **4/4 🟢** (cf. `../ETAT.md` §2), intégration Release dispatchée.
+  - **T-004** : déclencheur réduit à **VALIDATION PATRON** (T-002/T-003 🟢 acquis) — plus aucun ticket amont bloquant.
+  - **INDEX** : découpage vague 1 (intégrée) / vague 2 (livrée) ; graphe à jour ; **9/10 tickets livrés**, 0 EN COURS.
+- **Preuve** : commit `ea81580` sur `claude/tickets-4f4x54` ; **PR #11** mise à jour. Intégration vague 2 (dont ce rail) dispatchée à **Release**.
+- **Tests (R8)** : documentaire → **semi-auto** : contrôle croisé `ETAT.md` ↔ INDEX ↔ PR (#8/#13/#9/#10) — **OK** ; **humains** : validation orchestrateur/patron ; **preuve manquante** : néant.
+- **Sécurité** : aucun secret. **Aucune clôture *FAIT*** (VETO 18 P0 actif, 0 fermé — les P0 se ferment à l'implémentation conforme vérifiée QA). `/tickets` n'ouvre pas de SEC-###.
+- **Décisions nécessaires (R7)** : **T-004 est prêt, sauf GO patron** → arbitrer `../ETAT.md` §5 (modules/stack, partenaires, conformité, secrets, 1 secret maître vs kit, wallet EMI, PCI-DSS/eIDAS, **Design Q1–Q8**). N'a pas bloqué la mission.
+- **Reste à faire / prompt de reprise** : sur **GO patron** → activer **T-004** (À FAIRE → EN COURS) ; suivre l'intégration Release de la vague 2 ; ne clore *FAIT* qu'après **VERIFIED prod + 0 P0**.
+- **Routage** : produit → `/memoire-produit` ; sécurité → `/securite` ; GO T-004 + décisions → **patron/orchestrateur** ; intégration → **Release**.
+
+## [2026-07-23] Maintenance post-vague 1 — états, re-séquençage & tickets T-009/T-010
+- **Feu** : 🟢 READY_FOR_PUSH
+- **Périmètre touché** : `orchestration/tickets/` (INDEX + fiches **T-001→T-010**, dont **T-009/T-010 nouveaux**) + ce rapport. **Writer unique respecté** ; `../ETAT.md` et les rapports d'autres agents **lus seulement**.
+- **Fait** :
+  - **États synchronisés** sur les rapports d'agents mergés dans `atelier` : **T-001** & **T-005** (PR #2), **T-006** (PR #4), **T-007** (PR #3), **T-008** (PR #5) passés **EN COURS → EN RECETTE (🟢 livré)** avec preuve. Clôture *FAIT* **non** appliquée (anti-récidive : pas de VERIFIED prod ; **VETO Release 18 P0** actif).
+  - **Déclencheurs re-séquencés** d'après `../ETAT.md` §4 : **T-002** lançable (T-001 🟢 + `atelier` intégré) ; **T-003** repoussé **après T-002** (même writer `/securite`, 1 mission à la fois) ; **T-004** = T-002/T-003 🟢 + patron.
+  - **2 tickets créés** (routés par la Sécurité, IDs posés dans `ETAT.md` §4) : **T-009** isolation LI/rétention télco vs coffre ZK (`/module-infra`, **P0**) ; **T-010** SPECS anti-capture/anti-overlay (`/design`, **P1**). Origine tracée = **T-001** (SEC-### P0).
+  - **INDEX** : sommaire T-001→T-010, découpage **vague 1 (livrée)** / **vague 2 (lançable)**, graphe des déclencheurs à jour, priorisation S0–S2 reconfirmée.
+- **Preuve** : commit `4230c03` sur `claude/tickets-4f4x54` (rebasé sur `atelier` intégré) ; **PR draft #11** → `atelier` (https://github.com/ygonzalesei-cmyk/Tel-Online/pull/11). Branche **redémarrée depuis `atelier`** (PR #6 déjà mergée).
+- **Tests (R8)** : livrable documentaire → **automatisables** : aucun ; **semi-auto** : contrôle croisé `ETAT.md` ↔ INDEX ↔ fiches ↔ rapports agents (états / PR / déclencheurs) — **OK** ; **humains obligatoires** : validation orchestrateur/patron ; **preuve manquante** : néant.
+- **Sécurité** : aucun secret introduit. **T-009** protège explicitement la promesse zero-knowledge (aucun affaiblissement du ZK pour la LI ⇒ P0/veto). `/tickets` n'ouvre pas de SEC-### (→ `/securite`).
+- **Décisions nécessaires (R7)** : cf. `../ETAT.md` §5 (dépôt, partenaires, conformité, secrets) + décisions Sécurité T-001 (2 secrets vs kit hardware-backed ; portefeuille EMI ; périmètre PCI-DSS / PVID-eIDAS). N'ont pas bloqué la mission.
+- **Reste à faire / prompt de reprise** : dès **T-002 🟢** → basculer T-003 en lançable ; dès **T-002/T-003 🟢 + patron** → activer T-004 ; suivre les feux de **T-009/T-010** ; ne clore *FAIT* qu'après **VERIFIED prod + 0 P0**.
+- **Routage** : produit → `/memoire-produit` ; sécurité / SEC-### → `/securite` ; intégration de la PR → **orchestrateur** (base `atelier`).
+
 ## [2026-07-23] T-001→T-008 — Formalisation des fiches + priorisation S0–S2
 - **Feu** : 🟢 READY_FOR_PUSH
 - **Périmètre touché** : `orchestration/tickets/` (`INDEX.md` + `T-001`→`T-008`) + ce rapport `orchestration/rapports/tickets.md`. **Writer unique respecté** ; aucun fichier hors périmètre modifié (ni code, ni rapports d'autres agents, ni `ETAT.md`).
